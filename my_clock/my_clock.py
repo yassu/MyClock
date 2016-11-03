@@ -1,5 +1,6 @@
 from optparse import OptionParser
 import sys
+import subprocess
 from os import system
 from time import sleep
 
@@ -11,6 +12,13 @@ DEFAULT_SPEND_TIME = 25 * 60
 # DEFAULT_SPEND_TIME = 3
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
+
+def executable_terminal_notifier():
+    try:
+        subprocess.check_output(['terminal-notifier', '-help'])
+        return True
+    except FileNotFoundError:
+        return False
 
 def notify(title, msg):
     system('terminal-notifier -title {} -message {} -sound default'.format(
@@ -73,6 +81,9 @@ def main():
         print(ex.args[0])
         sys.exit()
     print('sleep {}'.format(sleep_time))
+
+    if not executable_terminal_notifier():
+        print('Please install terminal_notifier')
 
     sleep(sleep_time)
     notify(opts.title, opts.message)
