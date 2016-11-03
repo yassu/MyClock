@@ -31,11 +31,10 @@ setup(
     author_email='mathyassu@gmail.com',
     url='https://github.com/yassu/MyClock',
     packages=['my_clock'],
-    install_requires = ['json5'],
+    install_requires=['json5'],
     classifiers=classifiers,
     entry_points="""
        [console_scripts]
        my_clock = my_clock.my_clock:main
     """,
 )
-
