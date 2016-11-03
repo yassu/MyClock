@@ -30,7 +30,7 @@ def notify(title, msg):
 
 
 def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
-                        task_name='default'):
+                       task_name='default'):
     if not os.path.isfile(conf_filename):
         return {}
 
@@ -110,10 +110,11 @@ def get_option_parser():
 def main():
     opts, args = get_option_parser().parse_args()
     conf_filename = opts.conf_filename
-    options = get_config_options(conf_filename=conf_filename, task_name=opts.task)
+    options = get_config_options(
+        conf_filename=conf_filename, task_name=opts.task)
     for key, value in {'message': opts.message,
-                        'title': opts.title,
-                        'time': args}.items():
+                       'title': opts.title,
+                       'time': args}.items():
         if value:
             options[key] = value
     options['message'] = options.get('message', DEFAULT_MESSAGE)
