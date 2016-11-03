@@ -68,3 +68,6 @@ def main():
 
     sleep(sleep_time)
     notify(opts.title, opts.message)
+
+if __name__ == '__main__':
+    main()
