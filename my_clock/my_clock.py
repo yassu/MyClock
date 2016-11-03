@@ -3,8 +3,10 @@
 
 from optparse import OptionParser
 import sys
+import json5
 import subprocess
 from os import system
+import os.path
 from time import sleep
 
 __VERSION__ = "0.0.4"
@@ -12,6 +14,7 @@ __VERSION__ = "0.0.4"
 
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
+DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
 
 
 def executable_terminal_notifier():
@@ -27,6 +30,15 @@ def notify(title, msg):
         title, msg))
 
 
+def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
+                        task_name='default'):
+    if not os.path.isfile(conf_filename):
+        return {}
+
+    with open(conf_filename) as jf:
+        return json5.load(jf).get(task_name, {})
+
+
 class TimeSyntaxError(ValueError):
     """ Time Syntax Error """
 
@@ -35,9 +47,11 @@ class TimeNotFoundError(ValueError):
     """ TimeNotFoundError """
 
 
-def get_time(times):
-    if len(times) == 0:
+def get_time(times, conf_times):
+    if len(times) == 0 and len(conf_times) == 0:
         raise TimeNotFoundError('TIME IS NOT FOUND')
+    if len(times) == 0:
+        times = conf_times
 
     _time = 0
     for t in times:
@@ -63,23 +77,37 @@ def get_option_parser():
         action='store',
         dest='message',
         type=str,
-        default=DEFAULT_MESSAGE,
         help='set message string')
     parser.add_option(
         '-t', '--title',
         action='store',
         dest='title',
         type=str,
-        default=DEFAULT_TITLE,
         help='set title string')
+    parser.add_option(
+        '-T', '--task',
+        action='store',
+        dest='task',
+        default='default',
+        type=str,
+        help='set task string')
     return parser
 
 
 def main():
     opts, args = get_option_parser().parse_args()
+    options = get_config_options(task_name=opts.task)
+    for key, value in {'message': opts.message, 'title': opts.title,
+                        'time': args}.items():
+        if value:
+            options[key] = value
+    options['message'] = options.get('message', DEFAULT_MESSAGE)
+    options['title'] = options.get('title', DEFAULT_TITLE)
 
     try:
-        sleep_time = get_time(args)
+        if 'time' not in options:
+            raise TimeNotFoundError()
+        sleep_time = get_time(args, options['time'])
     except TimeNotFoundError:
         sys.stderr.write('Please input times.\n')
         sys.exit()
@@ -91,9 +119,8 @@ def main():
         sys.stderr.write('Please install terminal_notifier\n')
 
     print('sleep {}'.format(sleep_time))
-
     sleep(sleep_time)
-    notify(opts.title, opts.message)
+    notify(options['title'], options['message'])
 
 if __name__ == '__main__':
     main()
