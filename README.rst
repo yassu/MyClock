@@ -52,26 +52,26 @@ You can change configure file path by `--conf-file` option.
 
 For example,
 
-``` json
-{
-  "default": {
-    "title": "MyTitle",
-    "message": "MyMessage",
-    "time": ["3s"]
-  },
+.. code::
 
-  "pomodoro-job": {
-    "title": "Pomodoro Job",
-    "message": "finished",
-    "time": ["25m"]
-  },
-  "pomodoro-rest": {
-    "title": "Pomodoro Rest",
-    "message": "Rest is finished",
-    "time": ["5m"]
+  {
+    "default": {
+      "title": "MyTitle",
+      "message": "MyMessage",
+      "time": ["3s"]
+    },
+
+    "pomodoro-job": {
+      "title": "Pomodoro Job",
+      "message": "finished",
+      "time": ["25m"]
+    },
+    "pomodoro-rest": {
+      "title": "Pomodoro Rest",
+      "message": "Rest is finished",
+      "time": ["5m"]
+    }
   }
-}
-```
 
 LICENSE
 ---------
