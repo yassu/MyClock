@@ -9,7 +9,7 @@ from os import system
 import os.path
 from time import sleep
 
-__VERSION__ = "0.0.4"
+__VERSION__ = "0.0.5"
 # TODO: ファイルを使って Optionを定義できるようにする
 
 DEFAULT_TITLE = 'MyClock'
