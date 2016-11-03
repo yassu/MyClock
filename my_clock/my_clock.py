@@ -10,7 +10,6 @@ import os.path
 from time import sleep
 
 __VERSION__ = "0.0.5"
-# TODO: ファイルを使って Optionを定義できるようにする
 
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
@@ -91,13 +90,22 @@ def get_option_parser():
         default='default',
         type=str,
         help='set task string')
+    parser.add_option(
+        '-f', '--conf-file',
+        action='store',
+        dest='conf_filename',
+        default=DEFAULT_CONFIG_JFILENAME,
+        type=str,
+        help='set configure filename string')
     return parser
 
 
 def main():
     opts, args = get_option_parser().parse_args()
-    options = get_config_options(task_name=opts.task)
-    for key, value in {'message': opts.message, 'title': opts.title,
+    conf_filename = opts.conf_filename
+    options = get_config_options(conf_filename=conf_filename, task_name=opts.task)
+    for key, value in {'message': opts.message,
+                        'title': opts.title,
                         'time': args}.items():
         if value:
             options[key] = value
