@@ -8,6 +8,8 @@ python:
 install:
   - pip install nose
   - pip install json5
+  - pip install flake8
 
 script:
   - nosetests
+  - flake8
