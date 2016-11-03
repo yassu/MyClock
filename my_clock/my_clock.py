@@ -4,9 +4,8 @@ import subprocess
 from os import system
 from time import sleep
 
+__VERSION__ = "0.0.4"
 # TODO: ファイルを使って Optionを定義できるようにする
-
-__VERSION__ = '0.0.3'
 
 DEFAULT_SPEND_TIME = 25 * 60
 # DEFAULT_SPEND_TIME = 3

@@ -1,6 +1,5 @@
 from setuptools import setup
-
-__VERSION__ = '0.0.3'
+from my_clock.my_clock import __VERSION__
 
 classifiers = [
     'Development Status :: 4 - Beta',
