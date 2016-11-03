@@ -15,6 +15,7 @@ DEFAULT_SPEND_TIME = 25 * 60
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
 
+
 def executable_terminal_notifier():
     try:
         subprocess.check_output(['terminal-notifier', '-help'])
@@ -22,15 +23,19 @@ def executable_terminal_notifier():
     except FileNotFoundError:
         return False
 
+
 def notify(title, msg):
     system('terminal-notifier -title {} -message {} -sound default'.format(
         title, msg))
 
+
 class TimeSyntaxError(ValueError):
     """ Time Syntax Error """
 
+
 class TimeNotFoundError(ValueError):
     """ TimeNotFoundError """
+
 
 def get_time(times):
     if len(times) == 0:
@@ -38,11 +43,11 @@ def get_time(times):
 
     _time = 0
     for t in times:
-        if len(t) >= 1 and t[:-1].isdigit() and t[-1] == 'h': # hour
+        if len(t) >= 1 and t[:-1].isdigit() and t[-1] == 'h':  # hour
             _time += 60 * 60 * int(t[:-1])
-        elif len(t) >= 1 and t[:-1].isdigit() and t[-1] == 'm': # minute
+        elif len(t) >= 1 and t[:-1].isdigit() and t[-1] == 'm':  # minute
             _time += 60 * int(t[:-1])
-        elif len(t) >= 1 and t[:-1].isdigit() and t[-1] == 's': # second
+        elif len(t) >= 1 and t[:-1].isdigit() and t[-1] == 's':  # second
             _time += int(t[:-1])
         elif len(t) >= 1 and t.isdigit():   # minute
             _time += 60 * int(t)
@@ -71,6 +76,7 @@ def get_option_parser():
         help='set title string')
     return parser
 
+
 def main():
     opts, args = get_option_parser().parse_args()
 
@@ -84,7 +90,7 @@ def main():
         sys.exit()
 
     if not executable_terminal_notifier():
-        std.stderr.write('Please install terminal_notifier\n')
+        sys.stderr.write('Please install terminal_notifier\n')
 
     print('sleep {}'.format(sleep_time))
 
