@@ -1,1 +1,3 @@
+docutils==0.12
+-e git+https://github.com/yassu/MyClock.git@b2d215173bdbc8597ae70a979133c0a04d011a8e#egg=my_clock
 nose==1.3.7
