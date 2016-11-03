@@ -4,7 +4,7 @@ MyClock
 Usage
 -------
 
-.. code:: bash
+.. code::
 
   my_clock [options] [times]
 
@@ -14,13 +14,13 @@ MyClock program spends 60 * 60 * `h` + 60 * `m` + `s` times and notice by popup.
 
 How to install
 ----------------
-.. code:: bash
+.. code::
 
     % pip install my_clock
 
 or
 
-.. code:: bash
+.. code::
 
     % python setup.py install
 
