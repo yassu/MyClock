@@ -6,8 +6,6 @@ classifiers = [
     'Environment :: Console',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python',
-    'Programming Language :: Python :: 2',
-    'Programming Language :: Python :: 2.7',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: 3.4',
@@ -33,6 +31,7 @@ setup(
     author_email='mathyassu@gmail.com',
     url='https://github.com/yassu/MyClock',
     packages=['my_clock'],
+    install_requires = ['json5'],
     classifiers=classifiers,
     entry_points="""
        [console_scripts]
