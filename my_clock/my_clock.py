@@ -42,7 +42,7 @@ def get_time(times):
 
 
 def get_option_parser():
-    usage = 'my_clock [options]'
+    usage = 'my_clock [options] times'
     parser = OptionParser(usage=usage, version=__VERSION__)
     parser.add_option(
         '-g', '--message',
