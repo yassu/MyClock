@@ -72,6 +72,12 @@ def get_option_parser():
     usage = 'my_clock [options] times'
     parser = OptionParser(usage=usage, version=__VERSION__)
     parser.add_option(
+        '-V', '--verbose',
+        action='store_true',
+        default=False,
+        dest='is_verbose'
+    )
+    parser.add_option(
         '-g', '--message',
         action='store',
         dest='message',
@@ -126,9 +132,15 @@ def main():
     if not executable_terminal_notifier():
         sys.stderr.write('Please install terminal_notifier\n')
 
-    print('sleep {}'.format(sleep_time))
+    if opts.is_verbose:
+        print('options: {}'.format(str(options)))
+        print('sleep {}'.format(sleep_time))
+        print('begin {} task'.format(opts.task))
     sleep(sleep_time)
     notify(options['title'], options['message'])
+
+    if opts.is_verbose:
+        print('finished {} task'.format(opts.task))
 
 if __name__ == '__main__':
     main()
