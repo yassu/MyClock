@@ -14,6 +14,11 @@ MyClock program spends 60 * 60 * `h` + 60 * `m` + `s` times and notice by popup.
 
 How to install
 ----------------
+.. code:: bash
+
+    % pip install my_clock
+
+or
 
 .. code:: bash
 
