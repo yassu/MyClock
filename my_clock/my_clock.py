@@ -75,7 +75,8 @@ def get_option_parser():
         '-V', '--verbose',
         action='store_true',
         default=False,
-        dest='is_verbose'
+        dest='is_verbose',
+        help='verbose'
     )
     parser.add_option(
         '-g', '--message',

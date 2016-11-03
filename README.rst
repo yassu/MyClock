@@ -38,6 +38,7 @@ Options
 - `-h`, `--help`: show this help message and exit
 - `-g MESSAGE`, `--message=MESSAGE`: set message string
 - `-t TITLE`, `--title=TITLE`: set title string
+- `-V`, `--verbose`: verbose
 
 
 LICENSE
