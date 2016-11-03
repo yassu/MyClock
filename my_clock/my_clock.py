@@ -74,15 +74,16 @@ def main():
     try:
         sleep_time = get_time(args)
     except TimeNotFoundError:
-        print('Please input times.')
+        sys.stderr.write('Please input times.\n')
         sys.exit()
     except TimeSyntaxError as ex:
-        print(ex.args[0])
+        sys.stderr.write(ex.args[0] + '\n')
         sys.exit()
-    print('sleep {}'.format(sleep_time))
 
     if not executable_terminal_notifier():
-        print('Please install terminal_notifier')
+        std.stderr.write('Please install terminal_notifier\n')
+
+    print('sleep {}'.format(sleep_time))
 
     sleep(sleep_time)
     notify(opts.title, opts.message)
