@@ -12,7 +12,6 @@ classifiers = [
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: 3.4',
-    'Topic :: Software Development :: Libraries :: Python Modules',
     'Topic :: Utilities',
 ]
 
@@ -31,7 +30,7 @@ setup(
     name='my_clock',
     version=__VERSION__,
     description='my clock',
-    # long_description=open('README.rst').read(),
+    long_description=open('README.rst').read(),
     author='Yassu',
     author_email='mathyassu@gmail.com',
     url='https://github.com/yassu/MyClock',
