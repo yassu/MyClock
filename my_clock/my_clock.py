@@ -1,4 +1,5 @@
 from optparse import OptionParser
+import sys
 from os import system
 from time import sleep
 
@@ -63,7 +64,14 @@ def get_option_parser():
 def main():
     opts, args = get_option_parser().parse_args()
 
-    sleep_time = get_time(args)
+    try:
+        sleep_time = get_time(args)
+    except TimeNotFoundError:
+        print('Please input times.')
+        sys.exit()
+    except TimeSyntaxError as ex:
+        print(ex.args[0])
+        sys.exit()
     print('sleep {}'.format(sleep_time))
 
     sleep(sleep_time)
