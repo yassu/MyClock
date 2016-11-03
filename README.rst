@@ -29,7 +29,7 @@ at root directory of this project.
 Requirements
 --------------
 
-- terminal-notifier
+- `terminal-notifier <https://rubygems.org/gems/terminal-notifier/>`_
 
 Options
 ---------
