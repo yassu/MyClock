@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from optparse import OptionParser
 import sys
 import subprocess
