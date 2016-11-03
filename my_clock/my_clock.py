@@ -10,8 +10,6 @@ from time import sleep
 __VERSION__ = "0.0.4"
 # TODO: ファイルを使って Optionを定義できるようにする
 
-DEFAULT_SPEND_TIME = 25 * 60
-# DEFAULT_SPEND_TIME = 3
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
 
