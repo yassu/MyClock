@@ -12,16 +12,6 @@ classifiers = [
     'Topic :: Utilities',
 ]
 
-classifiers = [
-    'Development Status :: 2 - Pre-Alpha',
-    'Environment :: Console',
-    'License :: OSI Approved :: MIT License',
-    'Operating System :: Unix',
-    'Programming Language :: Python',
-    'Programming Language :: Python :: 3',
-    'Topic :: Terminals'
-]
-
 setup(
     name='my_clock',
     version=__VERSION__,
