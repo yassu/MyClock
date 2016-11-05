@@ -35,11 +35,15 @@ def notify(title, msg):
 
 def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
                        task_name='default'):
+    """ if task_name is None, return all config_options """
     if not os.path.isfile(conf_filename):
         return {}
 
     with open(conf_filename) as jf:
-        return json5.load(jf).get(task_name, {})
+        if task_name is None:
+            return json5.load(jf)
+        else:
+            return json5.load(jf).get(task_name, {})
 
 
 class TimeSyntaxError(ValueError):

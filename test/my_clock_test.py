@@ -47,6 +47,29 @@ def get_config_options_test2():
     })
 
 
+def get_config_options_test3():
+    conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
+        '/confs/clock1.json'
+    options = pm.get_config_options(conf_filename, task_name=None)
+    assert(options == {
+        "default": {
+            "title": "MyTitle",
+            "message": "MyMessage",
+            "time": ["3s"]
+        },
+        "pomodoro-job": {
+            "title": "Pomodoro Job",
+            "message": "finished",
+            "time": ["25m"]
+        },
+        "pomodoro-rest": {
+            "title": "Pomodoro Rest",
+            "message": "Rest is finished",
+            "time": ["5m"]
+        }
+    })
+
+
 def merge_options_test1():
     default_options = {
         'message': 'DefaultMessage',
