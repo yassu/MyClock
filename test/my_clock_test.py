@@ -27,7 +27,7 @@ def get_terminal_escape_test2():
 
 def get_config_options_test():
     conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
-        '/confs/clock1.json'
+        '/confs/clock1.json5'
     options = cl.get_config_options(conf_filename)  # use default task
     assert(options == {
         "title": "MyTitle",
@@ -38,7 +38,7 @@ def get_config_options_test():
 
 def get_config_options_test2():
     conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
-        '/confs/clock1.json'
+        '/confs/clock1.json5'
     options = cl.get_config_options(conf_filename, task_name='pomodoro-job')
     assert(options == {
         "title": "Pomodoro Job",
@@ -49,7 +49,7 @@ def get_config_options_test2():
 
 def get_config_options_test3():
     conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
-        '/confs/clock1.json'
+        '/confs/clock1.json5'
     options = cl.get_config_options(conf_filename, task_name=None)
     assert(options == {
         "default": {
@@ -72,14 +72,14 @@ def get_config_options_test3():
 
 def get_task_names_test():
     conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
-        '/confs/clock1.json'
+        '/confs/clock1.json5'
     task_names = cl.get_task_names(conf_filename)
     assert(set(task_names) == {"default", "pomodoro-job", "pomodoro-rest"})
 
 
 def get_task_names_test2():
     conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
-        '/confs/empty.json'
+        '/confs/empty.json5'
     task_names = cl.get_task_names(conf_filename)
     assert(set(task_names) == {"default"})
 
