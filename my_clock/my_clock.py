@@ -137,6 +137,7 @@ def main():
 
     if not executable_terminal_notifier():
         sys.stderr.write('Please install terminal_notifier\n')
+        sys.exit()
 
     if opts.is_verbose:
         print('options: {}'.format(str(options)))
