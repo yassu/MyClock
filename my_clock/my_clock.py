@@ -14,6 +14,7 @@ __VERSION__ = "0.1.3"
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
 DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
+DEFAULT_TASK_NAME = 'default'
 DEFAULT_SHOW_TASKS = False
 
 
@@ -39,7 +40,7 @@ class IllegalJson5Error(ValueError):
 
 
 def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
-                       task_name='default'):
+                       task_name=DEFAULT_TASK_NAME):
     """ if task_name is None, return all config_options """
     if not os.path.isfile(conf_filename):
         return {}
@@ -62,11 +63,11 @@ def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
 
 
 def get_task_names(conf_filename=DEFAULT_CONFIG_JFILENAME):
-    # if options is set(), return "default"
+    # if options is set(), return DEFAULT_TASK_NAME
     options = list(get_config_options(conf_filename=conf_filename,
                                       task_name=None))
     if options == []:
-        return ["default"]
+        return [DEFAULT_TASK_NAME]
     else:
         return options
 
@@ -145,7 +146,7 @@ def get_option_parser():
         '-T', '--task',
         action='store',
         dest='task',
-        default='default',
+        default=DEFAULT_TASK_NAME,
         type=str,
         help='set task string')
     parser.add_option(
