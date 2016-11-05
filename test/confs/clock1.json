@@ -4,7 +4,6 @@
     "message": "MyMessage",
     "time": ["3s"]
   },
-
   "pomodoro-job": {
     "title": "Pomodoro Job",
     "message": "finished",
