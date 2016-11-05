@@ -50,7 +50,7 @@ def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
 def get_task_names(conf_filename=DEFAULT_CONFIG_JFILENAME):
     # if options is set(), return "default"
     options = list(get_config_options(conf_filename=conf_filename,
-                                        task_name=None))
+                                      task_name=None))
     if options == []:
         return ["default"]
     else:

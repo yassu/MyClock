@@ -76,6 +76,7 @@ def get_task_names_test():
     task_names = cl.get_task_names(conf_filename)
     assert(set(task_names) == {"default", "pomodoro-job", "pomodoro-rest"})
 
+
 def get_task_names_test2():
     conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
         '/confs/empty.json'
