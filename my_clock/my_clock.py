@@ -14,6 +14,7 @@ __VERSION__ = "0.1.3"
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
 DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
+DEFAULT_SHOW_TASKS = False
 
 
 def executable_terminal_notifier():
@@ -90,11 +91,17 @@ def merge_options(default_opts, conf_opts):
     options = conf_opts.copy()
     for key, value in {'message': default_opts['message'],
                        'title': default_opts['title'],
+                       'show_tasks': default_opts['show_tasks'],
                        'time': default_opts['time']}.items():
-        if value:
+        if value not in (None, ''):
+            print("    key={}, value = {}".format(key, value))
             options[key] = value
+    print("options = {}".format(options))
     options['message'] = options.get('message', DEFAULT_MESSAGE)
     options['title'] = options.get('title', DEFAULT_TITLE)
+    options['show_tasks'] = options.get('show_tasks', DEFAULT_SHOW_TASKS)
+    # print("merge_options:")
+    # print(options)
     return options
 
 
@@ -134,6 +141,12 @@ def get_option_parser():
         default=DEFAULT_CONFIG_JFILENAME,
         type=str,
         help='set configure filename string')
+    parser.add_option(
+        '-l', '--list',
+        action='store_true',
+        dest='show_tasks',
+        default=False,
+        help='show task names')
     return parser
 
 
@@ -145,9 +158,15 @@ def main():
     options = merge_options({
         'message': opts.message,
         'title': opts.title,
+        'show_tasks': opts.show_tasks,
         'time': args
     },
         options)
+
+    if opts.show_tasks:
+        for name in get_task_names(conf_filename):
+            print(name)
+        sys.exit()
 
     try:
         if 'time' not in options:
@@ -173,6 +192,7 @@ def main():
 
     if opts.is_verbose:
         print('finished {} task'.format(opts.task))
+
 
 if __name__ == '__main__':
     main()

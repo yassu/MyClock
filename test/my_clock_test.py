@@ -87,6 +87,7 @@ def merge_options_test1():
     default_options = {
         'message': 'DefaultMessage',
         'title': 'DefaultTitle',
+        'show_tasks': False,
         'time': ['2s']}
     conf_options = {
         'message': 'ConfMessage',
@@ -100,15 +101,14 @@ def merge_options_test2():
     default_options = {
         'message': '',
         'title': 'DefaultTitle',
+        'show_tasks': False,
         'time': []
     }
     conf_options = {
         'message': 'ConfMessage',
         'title': 'ConfTitle',
+        'show_tasks': True,
         'time': ['4s']
     }
-    assert(pm.merge_options(default_options, conf_options) == {
-        'message': 'ConfMessage',
-        'title': 'DefaultTitle',
-        'time': ['4s']
-    })
+    assert(pm.merge_options(default_options,
+                            conf_options)['show_tasks'] == False)
