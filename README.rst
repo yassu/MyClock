@@ -46,7 +46,7 @@ Options
 - `-t TITLE`, `--title=TITLE`: set title string. default: "MyClock"
 - `-T TASK`, `--task=TASK`:  set task string default: "default"
 - `-V`, `--verbose`: verbose
-- `-f {filename}`, `--conf-file`: set configure filename string default: "~/.clock.json"
+- `-f {filename}`, `--conf-file {filename}`: set configure filename string default: "~/.clock.json"
 
 About Configure File
 ----------------------
