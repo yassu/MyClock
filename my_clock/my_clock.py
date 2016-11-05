@@ -24,9 +24,13 @@ def executable_terminal_notifier():
         return False
 
 
+def get_terminal_escape(s):
+    return "'{}'".format(s)
+
+
 def notify(title, msg):
     system('terminal-notifier -title {} -message {} -sound default'.format(
-        title, msg))
+        get_terminal_escape(title), get_terminal_escape(msg)))
 
 
 def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,

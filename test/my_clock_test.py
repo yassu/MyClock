@@ -15,3 +15,11 @@ def get_time_test2():
 
 def get_time_test3():
     assert(pm.get_time(['100s', '2', '3h'], []) == 3 * 60 * 60 + 2 * 60 + 100)
+
+
+def get_terminal_escape_test():
+    assert(pm.get_terminal_escape("Pomodoro") == "'Pomodoro'")
+
+
+def get_terminal_escape_test2():
+    assert(pm.get_terminal_escape("Pomodoro Job") == "'Pomodoro Job'")
