@@ -127,7 +127,7 @@ def get_option_parser():
         '-V', '--verbose',
         action='store_true',
         default=False,
-        dest='is_verbose',
+        dest='verbose',
         help='verbose'
     )
     parser.add_option(
@@ -202,14 +202,14 @@ def main():
         sys.stderr.write('Please install terminal_notifier\n')
         sys.exit()
 
-    if opts.is_verbose:
+    if opts.verbose:
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
         print('begin {} task'.format(opts.task))
     sleep(sleep_time)
     notify(options['title'], options['message'])
 
-    if opts.is_verbose:
+    if opts.verbose:
         print('finished {} task'.format(opts.task))
 
 
