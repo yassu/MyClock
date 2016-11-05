@@ -46,29 +46,31 @@ def get_config_options_test2():
         "time": ["25m"]
     })
 
+
 def merge_options_test1():
     default_options = {
-            'message': 'DefaultMessage',
-            'title': 'DefaultTitle',
-            'time': ['2s'] }
+        'message': 'DefaultMessage',
+        'title': 'DefaultTitle',
+        'time': ['2s']}
     conf_options = {
-            'message': 'ConfMessage',
-            'title': 'ConfTitle',
-            'time': ['4s']
-        }
+        'message': 'ConfMessage',
+        'title': 'ConfTitle',
+        'time': ['4s']
+    }
     assert(pm.merge_options(default_options, conf_options) == default_options)
+
 
 def merge_options_test2():
     default_options = {
-            'message': '',
-            'title': 'DefaultTitle',
-            'time': []
-            }
+        'message': '',
+        'title': 'DefaultTitle',
+        'time': []
+    }
     conf_options = {
-            'message': 'ConfMessage',
-            'title': 'ConfTitle',
-            'time': ['4s']
-        }
+        'message': 'ConfMessage',
+        'title': 'ConfTitle',
+        'time': ['4s']
+    }
     assert(pm.merge_options(default_options, conf_options) == {
         'message': 'ConfMessage',
         'title': 'DefaultTitle',
