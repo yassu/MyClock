@@ -34,6 +34,10 @@ def notify(title, msg):
         get_terminal_escape(title), get_terminal_escape(msg)))
 
 
+class IllegalJson5Error(ValueError):
+    """ Illegal Json5 syntax """
+
+
 def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
                        task_name='default'):
     """ if task_name is None, return all config_options """
@@ -42,9 +46,19 @@ def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
 
     with open(conf_filename) as jf:
         if task_name is None:
-            return json5.load(jf)
+            try:
+                return json5.load(jf)
+            except Exception as ex:
+                raise IllegalJson5Error(
+                    '{} occurs following json5 syntax error:\n'
+                    '{}'.format(conf_filename, ex.args[0]))
         else:
-            return json5.load(jf).get(task_name, {})
+            try:
+                return json5.load(jf).get(task_name, {})
+            except Exception as ex:
+                raise IllegalJson5Error(
+                    '{} occurs following json5 syntax error:\n'
+                    '{}'.format(conf_filename, ex.args[0]))
 
 
 def get_task_names(conf_filename=DEFAULT_CONFIG_JFILENAME):
@@ -153,8 +167,12 @@ def get_option_parser():
 def main():
     opts, args = get_option_parser().parse_args()
     conf_filename = opts.conf_filename
-    options = get_config_options(
-        conf_filename=conf_filename, task_name=opts.task)
+    try:
+        options = get_config_options(
+            conf_filename=conf_filename, task_name=opts.task)
+    except IllegalJson5Error as ex:
+        sys.stderr.write(ex.args[0] + '\n')
+        sys.exit()
     options = merge_options({
         'message': opts.message,
         'title': opts.title,
