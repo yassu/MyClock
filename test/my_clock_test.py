@@ -70,6 +70,19 @@ def get_config_options_test3():
     })
 
 
+def get_task_names_test():
+    conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
+        '/confs/clock1.json'
+    task_names = pm.get_task_names(conf_filename)
+    assert(set(task_names) == {"default", "pomodoro-job", "pomodoro-rest"})
+
+def get_task_names_test():
+    conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
+        '/confs/empty.json'
+    task_names = pm.get_task_names(conf_filename)
+    assert(set(task_names) == {"default"})
+
+
 def merge_options_test1():
     default_options = {
         'message': 'DefaultMessage',

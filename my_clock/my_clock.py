@@ -46,6 +46,16 @@ def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
             return json5.load(jf).get(task_name, {})
 
 
+def get_task_names(conf_filename=DEFAULT_CONFIG_JFILENAME):
+    # if options is set(), return "default"
+    options = list(get_config_options(conf_filename=conf_filename,
+                                        task_name=None))
+    if options == []:
+        return ["default"]
+    else:
+        return options
+
+
 class TimeSyntaxError(ValueError):
     """ Time Syntax Error """
 
