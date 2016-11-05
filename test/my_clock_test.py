@@ -23,3 +23,25 @@ def get_terminal_escape_test():
 
 def get_terminal_escape_test2():
     assert(pm.get_terminal_escape("Pomodoro Job") == "'Pomodoro Job'")
+
+
+def get_config_options_test():
+    conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
+        '/confs/clock1.json'
+    options = pm.get_config_options(conf_filename)  # use default task
+    assert(options == {
+        "title": "MyTitle",
+        "message": "MyMessage",
+        "time": ["3s"]
+    })
+
+
+def get_config_options_test2():
+    conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
+        '/confs/clock1.json'
+    options = pm.get_config_options(conf_filename, task_name='pomodoro-job')
+    assert(options == {
+        "title": "Pomodoro Job",
+        "message": "finished",
+        "time": ["25m"]
+    })
