@@ -71,6 +71,16 @@ def get_time(times, conf_times):
     else:
         return _time
 
+def merge_options(default_opts, conf_opts):
+    options = conf_opts.copy()
+    for key, value in {'message': default_opts['message'],
+                       'title': default_opts['title'],
+                       'time': default_opts['time']}.items():
+        if value:
+            options[key] = value
+    options['message'] = options.get('message', DEFAULT_MESSAGE)
+    options['title'] = options.get('title', DEFAULT_TITLE)
+    return options
 
 def get_option_parser():
     usage = 'my_clock [options] times'
@@ -116,13 +126,12 @@ def main():
     conf_filename = opts.conf_filename
     options = get_config_options(
         conf_filename=conf_filename, task_name=opts.task)
-    for key, value in {'message': opts.message,
-                       'title': opts.title,
-                       'time': args}.items():
-        if value:
-            options[key] = value
-    options['message'] = options.get('message', DEFAULT_MESSAGE)
-    options['title'] = options.get('title', DEFAULT_TITLE)
+    options = merge_options({
+            'message': opts.message,
+            'title': opts.title,
+            'time': args
+        },
+        options)
 
     try:
         if 'time' not in options:
