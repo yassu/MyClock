@@ -124,7 +124,7 @@ def merge_options(default_opts, conf_opts):
                        'verbose': default_opts['verbose'],
                        'show_tasks': default_opts['show_tasks'],
                        'time': default_opts['time']}.items():
-        if value not in (None, '', False):
+        if value not in (None, ''):
             print("    key={}, value = {}".format(key, value))
             options[key] = value
     print("options = {}".format(options))
