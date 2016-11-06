@@ -127,8 +127,8 @@ def merge_options(default_opts, conf_opts):
     for key, value in {'show_tasks': default_opts['show_tasks'],
                        'verbose': default_opts['verbose']
                        }.items():
-        if (key not in default_opts or default_opts[key] == False) and \
-                (key in options and options[key] == True):
+        if (key not in default_opts or default_opts[key] is False) and \
+                (key in options and options[key] is True):
             print('  in statement: key={}, value={}'.format(key, value))
             options[key] = value
 

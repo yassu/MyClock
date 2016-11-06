@@ -97,7 +97,7 @@ def merge_options_test1():
         'time': ['4s']
     }
     print(cl.merge_options(default_options, conf_options))
-    assert cl.merge_options(default_options, conf_options) == default_options, \
+    assert cl.merge_options(default_options, conf_options) == default_options,\
         '{} != {}'.format(cl.merge_options(default_options, conf_options),
                           default_options)
 
@@ -118,7 +118,7 @@ def merge_options_test2():
         'time': ['4s']
     }
     assert(cl.merge_options(default_options,
-                            conf_options)['show_tasks'] == False)
+                            conf_options)['show_tasks'] is False)
 
 
 def merge_options_test3():
@@ -137,4 +137,4 @@ def merge_options_test3():
         'time': ['4s']
     }
     assert(cl.merge_options(default_options,
-                            conf_options)['verbose'] == False)
+                            conf_options)['verbose'] is False)
