@@ -115,7 +115,7 @@ def merge_options_test2():
         'time': ['4s']
     }
     assert(cl.merge_options(default_options,
-                            conf_options)['show_tasks'] is False)
+                            conf_options)['show_tasks'] == False)
 
 def merge_options_test3():
     default_options = {
