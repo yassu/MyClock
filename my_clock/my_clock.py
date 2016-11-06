@@ -124,16 +124,12 @@ def merge_options(default_opts, conf_opts):
                        'verbose': default_opts['verbose'],
                        'show_tasks': default_opts['show_tasks'],
                        'time': default_opts['time']}.items():
-        if value not in (None, ''):
-            print("    key={}, value = {}".format(key, value))
+        if value:
             options[key] = value
-    print("options = {}".format(options))
     options['message'] = options.get('message', DEFAULT_MESSAGE)
     options['title'] = options.get('title', DEFAULT_TITLE)
     options['verbose'] = options.get('verbose', DEFAULT_TITLE)
     options['show_tasks'] = options.get('show_tasks', DEFAULT_SHOW_TASKS)
-    # print("merge_options:")
-    # print(options)
     return options
 
 
@@ -207,6 +203,7 @@ def main():
 
     try:
         if 'time' not in options:
+            print(options)
             raise TimeNotFoundError()
         sleep_time = get_time(args, options['time'])
     except TimeNotFoundError:
@@ -220,14 +217,14 @@ def main():
         sys.stderr.write('Please install terminal_notifier\n')
         sys.exit()
 
-    if opts.verbose:
+    if options["verbose"]:
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
         print('begin {} task'.format(opts.task))
     sleep(sleep_time)
     notify(options['title'], options['message'])
 
-    if opts.verbose:
+    if options["verbose"]:
         print('finished {} task'.format(opts.task))
     afplay(DEFAULT_BELL_SOUND_FILENAME)
 
