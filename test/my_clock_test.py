@@ -89,7 +89,7 @@ def merge_options_test1():
         'message': 'DefaultMessage',
         'title': 'DefaultTitle',
         'show_tasks': False,
-        'verbose': True,
+        'verbose': False,
         'time': ['2s']}
     conf_options = {
         'message': 'ConfMessage',
