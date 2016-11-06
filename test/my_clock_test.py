@@ -89,6 +89,7 @@ def merge_options_test1():
         'message': 'DefaultMessage',
         'title': 'DefaultTitle',
         'show_tasks': False,
+        'verbose': True,
         'time': ['2s']}
     conf_options = {
         'message': 'ConfMessage',
@@ -103,13 +104,33 @@ def merge_options_test2():
         'message': '',
         'title': 'DefaultTitle',
         'show_tasks': False,
+        'verbose': False,
         'time': []
     }
     conf_options = {
         'message': 'ConfMessage',
         'title': 'ConfTitle',
+        'verbose': True,
         'show_tasks': True,
         'time': ['4s']
     }
     assert(cl.merge_options(default_options,
                             conf_options)['show_tasks'] is False)
+
+def merge_options_test3():
+    default_options = {
+        'message': '',
+        'title': 'DefaultTitle',
+        'show_tasks': False,
+        'verbose': False,
+        'time': []
+    }
+    conf_options = {
+        'message': 'ConfMessage',
+        'title': 'ConfTitle',
+        'verbose': True,
+        'show_tasks': True,
+        'time': ['4s']
+    }
+    assert(cl.merge_options(default_options,
+                            conf_options)['verbose'] == False)

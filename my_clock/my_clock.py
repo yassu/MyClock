@@ -13,6 +13,7 @@ __VERSION__ = "0.1.3"
 
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
+DEFAULT_VERBOSE = False
 DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
 DEFAULT_TASK_NAME = 'default'
 DEFAULT_SHOW_TASKS = False
@@ -120,14 +121,16 @@ def merge_options(default_opts, conf_opts):
     options = conf_opts.copy()
     for key, value in {'message': default_opts['message'],
                        'title': default_opts['title'],
+                       'verbose': default_opts['verbose'],
                        'show_tasks': default_opts['show_tasks'],
                        'time': default_opts['time']}.items():
-        if value not in (None, ''):
+        if value not in (None, '', False):
             print("    key={}, value = {}".format(key, value))
             options[key] = value
     print("options = {}".format(options))
     options['message'] = options.get('message', DEFAULT_MESSAGE)
     options['title'] = options.get('title', DEFAULT_TITLE)
+    options['verbose'] = options.get('verbose', DEFAULT_TITLE)
     options['show_tasks'] = options.get('show_tasks', DEFAULT_SHOW_TASKS)
     # print("merge_options:")
     # print(options)
@@ -191,6 +194,7 @@ def main():
     options = merge_options({
         'message': opts.message,
         'title': opts.title,
+        'verbose': opts.verbose,
         'show_tasks': opts.show_tasks,
         'time': args
     },
