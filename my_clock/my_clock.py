@@ -16,6 +16,8 @@ DEFAULT_MESSAGE = 'MyClock'
 DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
 DEFAULT_TASK_NAME = 'default'
 DEFAULT_SHOW_TASKS = False
+DEFAULT_BELL_SOUND_FILENAME = os.path.abspath(
+    os.path.dirname(os.path.abspath(__file__ )) + '/music/default_bell.mp3')
 
 
 def executable_terminal_notifier():
@@ -33,6 +35,18 @@ def get_terminal_escape(s):
 def notify(title, msg):
     system('terminal-notifier -title {} -message {} -sound default'.format(
         get_terminal_escape(title), get_terminal_escape(msg)))
+
+
+def executable_afplay():
+    try:
+        subprocess.check_output(['which', 'afplay'])
+        return True
+    except FileNotFoundError:
+        return False
+
+
+def afplay(mp3):
+    system('afplay {}'.format(mp3))
 
 
 class IllegalJson5Error(ValueError):
@@ -211,6 +225,7 @@ def main():
 
     if opts.verbose:
         print('finished {} task'.format(opts.task))
+    afplay(DEFAULT_BELL_SOUND_FILENAME)
 
 
 if __name__ == '__main__':
