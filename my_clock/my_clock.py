@@ -18,7 +18,7 @@ DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
 DEFAULT_TASK_NAME = 'default'
 DEFAULT_SHOW_TASKS = False
 DEFAULT_BELL_SOUND_FILENAME = os.path.abspath(
-    os.path.dirname(os.path.abspath(__file__ )) + '/music/default_bell.mp3')
+    os.path.dirname(os.path.abspath(__file__)) + '/music/default_bell.mp3')
 
 
 def executable_terminal_notifier():
@@ -121,14 +121,20 @@ def merge_options(default_opts, conf_opts):
     options = conf_opts.copy()
     for key, value in {'message': default_opts['message'],
                        'title': default_opts['title'],
-                       'verbose': default_opts['verbose'],
-                       'show_tasks': default_opts['show_tasks'],
                        'time': default_opts['time']}.items():
         if value:
             options[key] = value
+    for key, value in {'show_tasks': default_opts['show_tasks'],
+                       'verbose': default_opts['verbose']
+                       }.items():
+        if (key not in default_opts or default_opts[key] == False) and \
+                (key in options and options[key] == True):
+            print('  in statement: key={}, value={}'.format(key, value))
+            options[key] = value
+
     options['message'] = options.get('message', DEFAULT_MESSAGE)
     options['title'] = options.get('title', DEFAULT_TITLE)
-    options['verbose'] = options.get('verbose', DEFAULT_TITLE)
+    options['verbose'] = options.get('verbose', DEFAULT_VERBOSE)
     options['show_tasks'] = options.get('show_tasks', DEFAULT_SHOW_TASKS)
     return options
 
