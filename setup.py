@@ -10,6 +10,7 @@ classifiers = [
     'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: 3.4',
     'Topic :: Utilities',
+    'Environment :: MacOS X'
 ]
 
 setup(
