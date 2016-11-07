@@ -169,7 +169,7 @@ def get_option_parser():
         action='store_true',
         default=False,
         dest='ring_bell',
-        help='verbose'
+        help='ring bell or not'
     )
     parser.add_option(
         '-T', '--task',
