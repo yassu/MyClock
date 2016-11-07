@@ -9,7 +9,7 @@ from os import system
 import os.path
 from time import sleep
 
-__VERSION__ = "0.1.3"
+__VERSION__ = "0.1.4"
 
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
