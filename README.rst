@@ -1,7 +1,7 @@
 MyClock
 =========
 
-*version: 0.1.3*
+*version: 0.1.4*
 
 MyClock is a simple and "programmable" clock program.
 
