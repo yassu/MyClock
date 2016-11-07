@@ -90,13 +90,13 @@ def merge_options_test1():
         'title': 'DefaultTitle',
         'show_tasks': False,
         'verbose': False,
+        'ring_bell': False,
         'time': ['2s']}
     conf_options = {
         'message': 'ConfMessage',
         'title': 'ConfTitle',
         'time': ['4s']
     }
-    print(cl.merge_options(default_options, conf_options))
     assert cl.merge_options(default_options, conf_options) == default_options,\
         '{} != {}'.format(cl.merge_options(default_options, conf_options),
                           default_options)
@@ -107,6 +107,7 @@ def merge_options_test2():
         'message': '',
         'title': 'DefaultTitle',
         'show_tasks': False,
+        'ring_bell': True,
         'verbose': False,
         'time': []
     }
@@ -127,6 +128,7 @@ def merge_options_test3():
         'title': 'DefaultTitle',
         'show_tasks': False,
         'verbose': False,
+        'ring_bell': False,
         'time': []
     }
     conf_options = {
