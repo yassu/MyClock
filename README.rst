@@ -1,6 +1,8 @@
 MyClock
 =========
 
+*version: 0.1.3*
+
 MyClock is a simple and "programmable" clock program.
 
 .. image:: https://travis-ci.org/yassu/MyClock.svg?branch=master
