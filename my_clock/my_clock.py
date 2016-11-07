@@ -119,17 +119,17 @@ def get_time(times, conf_times):
 
 def merge_options(default_opts, conf_opts):
     options = conf_opts.copy()
+    # option which takes value
     for key, value in {'message': default_opts['message'],
                        'title': default_opts['title'],
                        'time': default_opts['time']}.items():
         if value:
             options[key] = value
+    # store_true option
     for key, value in {'show_tasks': default_opts['show_tasks'],
                        'verbose': default_opts['verbose']
                        }.items():
-        if (key not in default_opts or default_opts[key] is False) and \
-                (key in options and options[key] is True):
-            print('  in statement: key={}, value={}'.format(key, value))
+        if (key in default_opts and default_opts[key] is True):
             options[key] = value
 
     options['message'] = options.get('message', DEFAULT_MESSAGE)
