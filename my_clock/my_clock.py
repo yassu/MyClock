@@ -17,6 +17,7 @@ DEFAULT_VERBOSE = False
 DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
 DEFAULT_TASK_NAME = 'default'
 DEFAULT_SHOW_TASKS = False
+DEFAULT_RING_BELL = False
 DEFAULT_BELL_SOUND_FILENAME = os.path.abspath(
     os.path.dirname(os.path.abspath(__file__)) + '/music/default_bell.mp3')
 
@@ -127,7 +128,8 @@ def merge_options(default_opts, conf_opts):
             options[key] = value
     # store_true option
     for key, value in {'show_tasks': default_opts['show_tasks'],
-                       'verbose': default_opts['verbose']
+                       'verbose': default_opts['verbose'],
+                       'ring_bell': default_opts['ring_bell']
                        }.items():
         if (key in default_opts and default_opts[key] is True):
             options[key] = value
@@ -136,6 +138,7 @@ def merge_options(default_opts, conf_opts):
     options['title'] = options.get('title', DEFAULT_TITLE)
     options['verbose'] = options.get('verbose', DEFAULT_VERBOSE)
     options['show_tasks'] = options.get('show_tasks', DEFAULT_SHOW_TASKS)
+    options['ring_bell'] = options.get('ring_bell', DEFAULT_RING_BELL)
     return options
 
 
@@ -161,6 +164,13 @@ def get_option_parser():
         dest='title',
         type=str,
         help='set title string')
+    parser.add_option(
+        '-r', '--ring-bell',
+        action='store_true',
+        default=False,
+        dest='ring_bell',
+        help='verbose'
+    )
     parser.add_option(
         '-T', '--task',
         action='store',
@@ -198,6 +208,7 @@ def main():
         'title': opts.title,
         'verbose': opts.verbose,
         'show_tasks': opts.show_tasks,
+        'ring_bell': opts.ring_bell,
         'time': args
     },
         options)
@@ -232,7 +243,8 @@ def main():
 
     if options["verbose"]:
         print('finished {} task'.format(opts.task))
-    afplay(DEFAULT_BELL_SOUND_FILENAME)
+    if options['ring_bell']:
+        afplay(DEFAULT_BELL_SOUND_FILENAME)
 
 
 if __name__ == '__main__':
