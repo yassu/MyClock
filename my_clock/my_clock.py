@@ -134,7 +134,8 @@ def merge_options(default_opts, conf_opts):
     # store_true option
     for key, value in {'show_tasks': default_opts['show_tasks'],
                        'verbose': default_opts['verbose'],
-                       'ring_bell': default_opts['ring_bell']
+                       'ring_bell': default_opts['ring_bell'],
+                       'hide_popup': default_opts['hide_popup']
                        }.items():
         if (key in default_opts and default_opts[key] is True):
             options[key] = value
@@ -144,6 +145,7 @@ def merge_options(default_opts, conf_opts):
     options['verbose'] = options.get('verbose', DEFAULT_VERBOSE)
     options['show_tasks'] = options.get('show_tasks', DEFAULT_SHOW_TASKS)
     options['ring_bell'] = options.get('ring_bell', DEFAULT_RING_BELL)
+    options['hide_popup'] = options.get('hide_popup', False)
     return options
 
 
@@ -175,6 +177,13 @@ def get_option_parser():
         default=False,
         dest='ring_bell',
         help='ring bell or not'
+    )
+    parser.add_option(
+        '--hide-popup',
+        action='store_true',
+        default=False,
+        dest='hide_popup',
+        help="don't show popup"
     )
     parser.add_option(
         '-T', '--task',
@@ -214,6 +223,7 @@ def main():
         'verbose': opts.verbose,
         'show_tasks': opts.show_tasks,
         'ring_bell': opts.ring_bell,
+        'hide_popup': opts.hide_popup,
         'time': args
     },
         options)
@@ -241,13 +251,15 @@ def main():
 
     if options['ring_bell'] and not executable_afplay():
         sys.stderr.write('Please install afplay\n')
+        sys.exit()
 
     if options["verbose"]:
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
         print('begin {} task'.format(opts.task))
     sleep(sleep_time)
-    notify(options)
+    if not options['hide_popup']:
+        notify(options)
 
     if options["verbose"]:
         print('finished {} task'.format(opts.task))
