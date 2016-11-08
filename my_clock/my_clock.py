@@ -128,6 +128,7 @@ def merge_options(default_opts, conf_opts):
     # option which takes value
     for key, value in {'message': default_opts['message'],
                        'title': default_opts['title'],
+                       'bell_sound': default_opts['bell_sound'],
                        'time': default_opts['time']}.items():
         if value:
             options[key] = value
@@ -179,6 +180,13 @@ def get_option_parser():
         help='ring bell or not'
     )
     parser.add_option(
+        '-b', '--bell-sound',
+        action='store',
+        dest='bell_sound',
+        default=DEFAULT_BELL_SOUND_FILENAME,
+        type=str,
+        help='mp3 file of bell_sound')
+    parser.add_option(
         '--hide-popup',
         action='store_true',
         default=False,
@@ -223,6 +231,7 @@ def main():
         'verbose': opts.verbose,
         'show_tasks': opts.show_tasks,
         'ring_bell': opts.ring_bell,
+        'bell_sound': opts.bell_sound,
         'hide_popup': opts.hide_popup,
         'time': args
     },
