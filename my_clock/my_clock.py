@@ -48,7 +48,7 @@ def executable_afplay():
     try:
         subprocess.check_output(['which', 'afplay'])
         return True
-    except FileNotFoundError:
+    except subprocess.CalledProcessError:
         return False
 
 
@@ -239,6 +239,9 @@ def main():
         sys.stderr.write('Please install terminal_notifier\n')
         sys.exit()
 
+    if options['ring_bell'] and not executable_afplay():
+        sys.stderr.write('Please install afplay\n')
+
     if options["verbose"]:
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
@@ -248,8 +251,7 @@ def main():
 
     if options["verbose"]:
         print('finished {} task'.format(opts.task))
-    if options['ring_bell']:
-        # afplay(DEFAULT_BELL_SOUND_FILENAME)
+    if options['ring_bell'] and executable_afplay():
         afplay(options)
 
 
