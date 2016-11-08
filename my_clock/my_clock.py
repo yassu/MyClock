@@ -21,6 +21,10 @@ DEFAULT_RING_BELL = False
 DEFAULT_BELL_SOUND_FILENAME = os.path.abspath(
     os.path.dirname(os.path.abspath(__file__)) + '/music/default_bell.mp3')
 
+def run_cmd(cmd, options):
+    if options['verbose']:
+        print('Run command: {}'.format(cmd))
+    system(cmd)
 
 def executable_terminal_notifier():
     try:
@@ -35,13 +39,9 @@ def get_terminal_escape(s):
 
 
 def notify(options):
-    cmd = 'terminal-notifier -title {} -message {} -sound default'.format(
+    run_cmd('terminal-notifier -title {} -message {} -sound default'.format(
         get_terminal_escape(options['title']),
-        get_terminal_escape(options['message']))
-
-    if options['verbose']:
-        print(cmd)
-    system(cmd)
+        get_terminal_escape(options['message'])), options)
 
 
 def executable_afplay():
@@ -53,10 +53,7 @@ def executable_afplay():
 
 
 def afplay(options):
-    cmd = 'afplay {}'.format(DEFAULT_BELL_SOUND_FILENAME)
-    if options["verbose"]:
-        print(cmd)
-    system(cmd)
+    run_cmd('afplay {}'.format(DEFAULT_BELL_SOUND_FILENAME), options)
 
 
 class IllegalJson5Error(ValueError):
