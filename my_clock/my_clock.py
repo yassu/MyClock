@@ -34,9 +34,14 @@ def get_terminal_escape(s):
     return "'{}'".format(s)
 
 
-def notify(title, msg):
-    system('terminal-notifier -title {} -message {} -sound default'.format(
-        get_terminal_escape(title), get_terminal_escape(msg)))
+def notify(options):
+    cmd = 'terminal-notifier -title {} -message {} -sound default'.format(
+        get_terminal_escape(options['title']),
+        get_terminal_escape(options['message']))
+
+    if options['verbose']:
+        print(cmd)
+    system(cmd)
 
 
 def executable_afplay():
@@ -47,8 +52,11 @@ def executable_afplay():
         return False
 
 
-def afplay(mp3):
-    system('afplay {}'.format(mp3))
+def afplay(options):
+    cmd = 'afplay {}'.format(DEFAULT_BELL_SOUND_FILENAME)
+    if options["verbose"]:
+        print(cmd)
+    system(cmd)
 
 
 class IllegalJson5Error(ValueError):
@@ -239,12 +247,13 @@ def main():
         print('sleep {}'.format(sleep_time))
         print('begin {} task'.format(opts.task))
     sleep(sleep_time)
-    notify(options['title'], options['message'])
+    notify(options)
 
     if options["verbose"]:
         print('finished {} task'.format(opts.task))
     if options['ring_bell']:
-        afplay(DEFAULT_BELL_SOUND_FILENAME)
+        # afplay(DEFAULT_BELL_SOUND_FILENAME)
+        afplay(options)
 
 
 if __name__ == '__main__':
