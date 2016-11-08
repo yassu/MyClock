@@ -253,6 +253,10 @@ def main():
         sys.stderr.write('Please install afplay\n')
         sys.exit()
 
+    if options['hide_popup'] and not options['ring_bell']:
+        sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
+        sys.exit()
+
     if options["verbose"]:
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
