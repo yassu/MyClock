@@ -59,6 +59,16 @@ def afplay(options):
 class IllegalJson5Error(ValueError):
     """ Illegal Json5 syntax """
 
+def get_option_value(opt_name, default_value, input_opts, conf_opts):
+    if opt_name in input_opts and input_opts[opt_name] != default_value:
+        print('Case A')
+        return input_opts[opt_name]
+    elif opt_name in conf_opts:
+        print('Case B')
+        return conf_opts[opt_name]
+    else:
+        print('Case C')
+        return input_opts[opt_name]
 
 def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
                        task_name=DEFAULT_TASK_NAME):
