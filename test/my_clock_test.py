@@ -4,6 +4,18 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 
+def get_default_opts():
+    return {
+        'message': cl.DEFAULT_MESSAGE,
+        'title': cl.DEFAULT_TITLE,
+        'show_tasks': False,
+        'verbose': False,
+        'ring_bell': False,
+        'time': [],
+        'hide_popup': False,
+        'bell_sound': cl.DEFAULT_BELL_SOUND_FILENAME,
+    }
+
 
 def get_time_test1():
     assert(cl.get_time(['1s', '2m', '3h'], []) == 3 * 60 * 60 + 2 * 60 + 1)
@@ -24,6 +36,8 @@ def get_terminal_escape_test():
 def get_terminal_escape_test2():
     assert(cl.get_terminal_escape("Pomodoro Job") == "'Pomodoro Job'")
 
+def get_option_value_test1():
+    pass
 
 def get_config_options_test():
     conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
@@ -84,59 +98,25 @@ def get_task_names_test2():
     assert(set(task_names) == {"default"})
 
 
-def merge_options_test1():
-    default_options = {
-        'message': 'DefaultMessage',
-        'title': 'DefaultTitle',
-        'show_tasks': False,
-        'verbose': False,
-        'ring_bell': False,
-        'time': ['2s']}
-    conf_options = {
-        'message': 'ConfMessage',
-        'title': 'ConfTitle',
-        'time': ['4s']
-    }
-    assert cl.merge_options(default_options, conf_options) == default_options,\
-        '{} != {}'.format(cl.merge_options(default_options, conf_options),
-                          default_options)
+def merge_options_message_test1():
+    """ なにもOptionがない場合のmessageのテスト """
+    assert cl.merge_options(get_default_opts(), {})['message'] == \
+        cl.DEFAULT_MESSAGE
 
+def merge_options_message_test2():
+    """ ConfだけOptionがある場合のmessageのテスト """
+    assert cl.merge_options(get_default_opts(), {'message': 'ConfMessage'}
+        )['message'] == 'ConfMessage'
 
-def merge_options_test2():
-    default_options = {
-        'message': '',
-        'title': 'DefaultTitle',
-        'show_tasks': False,
-        'ring_bell': True,
-        'verbose': False,
-        'time': []
-    }
-    conf_options = {
-        'message': 'ConfMessage',
-        'title': 'ConfTitle',
-        'verbose': True,
-        'show_tasks': True,
-        'time': ['4s']
-    }
-    assert(cl.merge_options(default_options,
-                            conf_options)['show_tasks'] is True)
+def merge_options_message_test3():
+    """ inputだけOptionがある場合のmessageのテスト """
+    default_opts = get_default_opts()
+    default_opts['message'] = 'DefaultMessage'
+    assert cl.merge_options(default_opts, {})['message'] == 'DefaultMessage'
 
-
-def merge_options_test3():
-    default_options = {
-        'message': '',
-        'title': 'DefaultTitle',
-        'show_tasks': False,
-        'verbose': False,
-        'ring_bell': False,
-        'time': []
-    }
-    conf_options = {
-        'message': 'ConfMessage',
-        'title': 'ConfTitle',
-        'verbose': True,
-        'show_tasks': True,
-        'time': ['4s']
-    }
-    assert(cl.merge_options(default_options,
-                            conf_options)['verbose'] is True)
+def merge_options_message_test4():
+    """ inputもconfもOptionがある場合のmessageのテスト """
+    default_opts = get_default_opts()
+    default_opts['message'] = 'DefaultMessage'
+    assert cl.merge_options(default_opts, {'message': 'ConfMessage'})['message'] ==  \
+        'DefaultMessage'
