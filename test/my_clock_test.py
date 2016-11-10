@@ -6,14 +6,14 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 
 def get_default_opts():
     return {
-        'message': cl.DEFAULT_MESSAGE,
-        'title': cl.DEFAULT_TITLE,
-        'show_tasks': False,
-        'verbose': False,
-        'ring_bell': False,
+        'message': None,
+        'title': None,
+        'show_tasks': None,
+        'verbose': None,
+        'ring_bell': None,
         'time': [],
-        'hide_popup': False,
-        'bell_sound': cl.DEFAULT_BELL_SOUND_FILENAME,
+        'hide_popup': None,
+        'bell_sound': None,
     }
 
 
@@ -124,7 +124,7 @@ def get_option_value_test4():
 
 def get_option_value_test2_1():
     """ input_opts, conf_optsに何も入力しない場合のverbose """
-    assert cl.get_option_value('verbose', cl.DEFAULT_MESSAGE, get_default_opts(),
+    assert cl.get_option_value('verbose', False, get_default_opts(),
         {}) == False
 
 def get_option_value_test2_2():
@@ -160,6 +160,8 @@ def get_option_value_test3():
 
 def merge_options_message_test1():
     """ なにもOptionがない場合のmessageのテスト """
+    print('test')
+    print(cl.merge_options(get_default_opts(), {})['message'])
     assert cl.merge_options(get_default_opts(), {})['message'] == \
         cl.DEFAULT_MESSAGE
 
