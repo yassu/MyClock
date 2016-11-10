@@ -13,13 +13,16 @@ __VERSION__ = "0.1.4"
 
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
-DEFAULT_VERBOSE = False
 DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
 DEFAULT_TASK_NAME = 'default'
-DEFAULT_SHOW_TASKS = False
-DEFAULT_RING_BELL = False
 DEFAULT_BELL_SOUND_FILENAME = os.path.abspath(
     os.path.dirname(os.path.abspath(__file__)) + '/music/default_bell.mp3')
+
+
+def run_cmd(cmd, options):
+    if options['verbose']:
+        print('Run command: {}'.format(cmd))
+    system(cmd)
 
 
 def executable_terminal_notifier():
@@ -34,25 +37,41 @@ def get_terminal_escape(s):
     return "'{}'".format(s)
 
 
-def notify(title, msg):
-    system('terminal-notifier -title {} -message {} -sound default'.format(
-        get_terminal_escape(title), get_terminal_escape(msg)))
+def notify(options):
+    run_cmd('terminal-notifier -title {} -message {} -sound default'.format(
+        get_terminal_escape(options['title']),
+        get_terminal_escape(options['message'])), options)
 
 
 def executable_afplay():
     try:
         subprocess.check_output(['which', 'afplay'])
         return True
-    except FileNotFoundError:
+    except subprocess.CalledProcessError:
         return False
 
 
-def afplay(mp3):
-    system('afplay {}'.format(mp3))
+def afplay(options):
+    run_cmd('afplay {}'.format(DEFAULT_BELL_SOUND_FILENAME), options)
 
 
 class IllegalJson5Error(ValueError):
     """ Illegal Json5 syntax """
+
+
+def get_option_value(opt_name, default_value, input_opts, conf_opts):
+    print('get_option_value')
+    print(opt_name)
+    print(input_opts)
+    if input_opts[opt_name] is not None:
+        print('Case A')
+        return input_opts[opt_name]
+    elif opt_name in conf_opts and conf_opts[opt_name] is not None:
+        print('Case B')
+        return conf_opts[opt_name]
+    else:
+        print('Case C')
+        return default_value
 
 
 def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
@@ -119,36 +138,29 @@ def get_time(times, conf_times):
 
 
 def merge_options(default_opts, conf_opts):
-    options = conf_opts.copy()
-    # option which takes value
-    for key, value in {'message': default_opts['message'],
-                       'title': default_opts['title'],
-                       'time': default_opts['time']}.items():
-        if value:
-            options[key] = value
-    # store_true option
-    for key, value in {'show_tasks': default_opts['show_tasks'],
-                       'verbose': default_opts['verbose'],
-                       'ring_bell': default_opts['ring_bell']
-                       }.items():
-        if (key in default_opts and default_opts[key] is True):
-            options[key] = value
-
-    options['message'] = options.get('message', DEFAULT_MESSAGE)
-    options['title'] = options.get('title', DEFAULT_TITLE)
-    options['verbose'] = options.get('verbose', DEFAULT_VERBOSE)
-    options['show_tasks'] = options.get('show_tasks', DEFAULT_SHOW_TASKS)
-    options['ring_bell'] = options.get('ring_bell', DEFAULT_RING_BELL)
-    return options
+    return {
+        'verbose': get_option_value('verbose', False, default_opts, conf_opts),
+        'message': get_option_value('message', DEFAULT_MESSAGE, default_opts,
+                                    conf_opts),
+        'title': get_option_value('title', DEFAULT_TITLE, default_opts,
+                                  conf_opts),
+        'ring_bell': get_option_value('ring_bell', False, default_opts,
+                                      conf_opts),
+        'bell_sound': get_option_value('bell_sound', False, default_opts,
+                                       conf_opts),
+        'hide_popup': get_option_value('hide_popup', False, default_opts,
+                                       conf_opts),
+        'time': get_option_value('time', [], default_opts, conf_opts)
+    }
 
 
 def get_option_parser():
     usage = 'my_clock [options] times'
     parser = OptionParser(usage=usage, version=__VERSION__)
+    # conf opts
     parser.add_option(
         '-V', '--verbose',
         action='store_true',
-        default=False,
         dest='verbose',
         help='verbose'
     )
@@ -156,21 +168,31 @@ def get_option_parser():
         '-g', '--message',
         action='store',
         dest='message',
-        type=str,
         help='set message string')
     parser.add_option(
         '-t', '--title',
         action='store',
         dest='title',
-        type=str,
         help='set title string')
     parser.add_option(
         '-r', '--ring-bell',
         action='store_true',
-        default=False,
         dest='ring_bell',
         help='ring bell or not'
     )
+    parser.add_option(
+        '-b', '--bell-sound',
+        action='store',
+        dest='bell_sound',
+        help='mp3 file of bell_sound')
+    parser.add_option(
+        '--hide-popup',
+        action='store_true',
+        dest='hide_popup',
+        help="don't show popup"
+    )
+
+    # not conf opts
     parser.add_option(
         '-T', '--task',
         action='store',
@@ -191,11 +213,13 @@ def get_option_parser():
         dest='show_tasks',
         default=False,
         help='show task names')
+
     return parser
 
 
 def main():
     opts, args = get_option_parser().parse_args()
+    print('args = {}'.format(args))
     conf_filename = opts.conf_filename
     try:
         options = get_config_options(
@@ -209,9 +233,12 @@ def main():
         'verbose': opts.verbose,
         'show_tasks': opts.show_tasks,
         'ring_bell': opts.ring_bell,
+        'bell_sound': opts.bell_sound,
+        'hide_popup': opts.hide_popup,
         'time': args
     },
         options)
+    print(options)
 
     if opts.show_tasks:
         for name in get_task_names(conf_filename):
@@ -234,17 +261,26 @@ def main():
         sys.stderr.write('Please install terminal_notifier\n')
         sys.exit()
 
+    if options['ring_bell'] and not executable_afplay():
+        sys.stderr.write('Please install afplay\n')
+        sys.exit()
+
+    if options['hide_popup'] and not options['ring_bell']:
+        sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
+        sys.exit()
+
     if options["verbose"]:
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
-        print('begin {} task'.format(opts.task))
+        print('begin {} time'.format(opts.task))
     sleep(sleep_time)
-    notify(options['title'], options['message'])
+    if not options['hide_popup']:
+        notify(options)
 
     if options["verbose"]:
-        print('finished {} task'.format(opts.task))
-    if options['ring_bell']:
-        afplay(DEFAULT_BELL_SOUND_FILENAME)
+        print('finished {} time'.format(opts.task))
+    if options['ring_bell'] and executable_afplay():
+        afplay(options)
 
 
 if __name__ == '__main__':

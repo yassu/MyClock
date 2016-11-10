@@ -50,6 +50,8 @@ Options
 - `-T TASK`, `--task=TASK`:  set task string default: "default"
 - `-V`, `--verbose`: verbose
 - `-f {filename}`, `--conf-file {filename}`: set configure filename string default: "~/.clock.json"
+- `-r`, `--ring-bell`: ring bell or not after timer
+- `-l`, `--list`: show task names
 
 About Configure File
 ----------------------
