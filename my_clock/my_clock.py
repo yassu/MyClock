@@ -58,19 +58,16 @@ def afplay(options):
 class IllegalJson5Error(ValueError):
     """ Illegal Json5 syntax """
 
+class NotDefinedTaskError(ValueError):
+    """ Illegal Json5 syntax """
+
 
 def get_option_value(opt_name, default_value, input_opts, conf_opts):
-    print('get_option_value')
-    print(opt_name)
-    print(input_opts)
     if input_opts[opt_name] is not None:
-        print('Case A')
         return input_opts[opt_name]
     elif opt_name in conf_opts and conf_opts[opt_name] is not None:
-        print('Case B')
         return conf_opts[opt_name]
     else:
-        print('Case C')
         return default_value
 
 
@@ -90,6 +87,9 @@ def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
                     '{}'.format(conf_filename, ex.args[0]))
         else:
             try:
+                if task_name not in get_task_names(conf_filename=conf_filename):
+                    raise NotDefinedTaskError('{} task is not defined.'.format(
+                                               task_name))
                 return json5.load(jf).get(task_name, {})
             except Exception as ex:
                 raise IllegalJson5Error(
@@ -219,7 +219,6 @@ def get_option_parser():
 
 def main():
     opts, args = get_option_parser().parse_args()
-    print('args = {}'.format(args))
     conf_filename = opts.conf_filename
     try:
         options = get_config_options(
@@ -238,7 +237,6 @@ def main():
         'time': args
     },
         options)
-    print(options)
 
     if opts.show_tasks:
         for name in get_task_names(conf_filename):
