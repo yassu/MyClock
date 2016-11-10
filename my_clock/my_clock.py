@@ -18,10 +18,12 @@ DEFAULT_TASK_NAME = 'default'
 DEFAULT_BELL_SOUND_FILENAME = os.path.abspath(
     os.path.dirname(os.path.abspath(__file__)) + '/music/default_bell.mp3')
 
+
 def run_cmd(cmd, options):
     if options['verbose']:
         print('Run command: {}'.format(cmd))
     system(cmd)
+
 
 def executable_terminal_notifier():
     try:
@@ -56,6 +58,7 @@ def afplay(options):
 class IllegalJson5Error(ValueError):
     """ Illegal Json5 syntax """
 
+
 def get_option_value(opt_name, default_value, input_opts, conf_opts):
     print('get_option_value')
     print(opt_name)
@@ -69,6 +72,7 @@ def get_option_value(opt_name, default_value, input_opts, conf_opts):
     else:
         print('Case C')
         return default_value
+
 
 def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
                        task_name=DEFAULT_TASK_NAME):
@@ -137,17 +141,18 @@ def merge_options(default_opts, conf_opts):
     return {
         'verbose': get_option_value('verbose', False, default_opts, conf_opts),
         'message': get_option_value('message', DEFAULT_MESSAGE, default_opts,
-            conf_opts),
+                                    conf_opts),
         'title': get_option_value('title', DEFAULT_TITLE, default_opts,
-            conf_opts),
+                                  conf_opts),
         'ring_bell': get_option_value('ring_bell', False, default_opts,
-            conf_opts),
+                                      conf_opts),
         'bell_sound': get_option_value('bell_sound', False, default_opts,
-            conf_opts),
+                                       conf_opts),
         'hide_popup': get_option_value('hide_popup', False, default_opts,
-            conf_opts),
+                                       conf_opts),
         'time': get_option_value('time', [], default_opts, conf_opts)
     }
+
 
 def get_option_parser():
     usage = 'my_clock [options] times'

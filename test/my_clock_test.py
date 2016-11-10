@@ -4,6 +4,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 
+
 def get_default_opts():
     return {
         'message': None,
@@ -36,8 +37,6 @@ def get_terminal_escape_test():
 def get_terminal_escape_test2():
     assert(cl.get_terminal_escape("Pomodoro Job") == "'Pomodoro Job'")
 
-def get_option_value_test1():
-    pass
 
 def get_config_options_test():
     conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
@@ -97,66 +96,78 @@ def get_task_names_test2():
     task_names = cl.get_task_names(conf_filename)
     assert(set(task_names) == {"default"})
 
+
 def get_option_value_test1():
     """ input_opts, conf_optsに何も入力しない場合のMessage """
-    assert cl.get_option_value('message', cl.DEFAULT_MESSAGE, get_default_opts(),
-        {}) == cl.DEFAULT_MESSAGE
+    assert cl.get_option_value('message', cl.DEFAULT_MESSAGE,
+                               get_default_opts(), {}) == cl.DEFAULT_MESSAGE
+
 
 def get_option_value_test2():
     """ input_optsだけ入力する場合のMessage """
     default_opts = get_default_opts()
     default_opts['message'] = 'InputMessage'
     print(cl.get_option_value('message', cl.DEFAULT_MESSAGE, default_opts, {}))
-    assert cl.get_option_value('message', cl.DEFAULT_MESSAGE, default_opts, {}) == \
-            'InputMessage'
+    assert cl.get_option_value('message', cl.DEFAULT_MESSAGE,
+                               default_opts, {}) == 'InputMessage'
+
 
 def get_option_value_test3():
     """ conf_optsだけ入力する場合のMessage """
-    assert cl.get_option_value('message', cl.DEFAULT_MESSAGE, get_default_opts(),
-        {'message': 'TestMessage'}) == 'TestMessage'
+    assert(cl.get_option_value('message', cl.DEFAULT_MESSAGE,
+                               get_default_opts(), {'message': 'TestMessage'})
+                               == 'TestMessage')
+
 
 def get_option_value_test4():
     """ input_opts, conf_optsを入力する場合のMessage """
     default_opts = get_default_opts()
     default_opts['message'] = 'InputMessage'
-    assert cl.get_option_value('message', cl.DEFAULT_MESSAGE, default_opts, \
-        {'message': 'testmessage'}) == 'InputMessage'
+    assert cl.get_option_value('message', cl.DEFAULT_MESSAGE, default_opts,
+                               {'message': 'testmessage'}) == 'InputMessage'
+
 
 def get_option_value_test2_1():
     """ input_opts, conf_optsに何も入力しない場合のverbose """
-    assert cl.get_option_value('verbose', False, get_default_opts(),
-        {}) == False
+    assert (cl.get_option_value('verbose', False, get_default_opts(),
+                               {}) is False)
+
 
 def get_option_value_test2_2():
     """ input_optsだけ入力する場合のverbose """
     default_opts = get_default_opts()
     default_opts['verbose'] = True
     assert cl.get_option_value('verbose', False, default_opts,
-        {}) == True
+                               {}) is True
+
 
 def get_option_value_test2_3():
     """ conf_optsだけ入力する場合のverbose """
     assert cl.get_option_value('verbose', False, get_default_opts(),
-        {'verbose': True}) == True
+                               {'verbose': True}) is True
+
 
 def get_option_value_test2_4():
     """ input_opts, conf_optsを入力する場合のverbose """
     default_opts = get_default_opts()
     default_opts['verbose'] = True
     assert cl.get_option_value('verbose', False, default_opts,
-        {'verbose': True}) == True
+                               {'verbose': True}) is True
+
 
 def get_option_value_test2_5():
     """ conf_opts = True, input_opts=Falseの場合 """
     default_opts = get_default_opts()
     default_opts['verbose'] = False
     assert cl.get_option_value('verbose', False, default_opts,
-        {'verbose': True}) == False
+                               {'verbose': True}) is False
 
-def get_option_value_test3():
+
+def get_option_value_test3_0():
     """ conf_optsだけ入力する場合のMessage """
     cl.get_option_value('message', cl.DEFAULT_MESSAGE, get_default_opts(),
-        {'message': 'MessageTest'}) == ''
+                        {'message': 'MessageTest'}) == ''
+
 
 def merge_options_message_test1():
     """ なにもOptionがない場合のmessageのテスト """
@@ -165,10 +176,12 @@ def merge_options_message_test1():
     assert cl.merge_options(get_default_opts(), {})['message'] == \
         cl.DEFAULT_MESSAGE
 
+
 def merge_options_message_test2():
     """ ConfだけOptionがある場合のmessageのテスト """
     assert cl.merge_options(get_default_opts(), {'message': 'ConfMessage'}
-        )['message'] == 'ConfMessage'
+                            )['message'] == 'ConfMessage'
+
 
 def merge_options_message_test3():
     """ inputだけOptionがある場合のmessageのテスト """
@@ -176,9 +189,11 @@ def merge_options_message_test3():
     default_opts['message'] = 'DefaultMessage'
     assert cl.merge_options(default_opts, {})['message'] == 'DefaultMessage'
 
+
 def merge_options_message_test4():
     """ inputもconfもOptionがある場合のmessageのテスト """
     default_opts = get_default_opts()
     default_opts['message'] = 'DefaultMessage'
-    assert cl.merge_options(default_opts, {'message': 'ConfMessage'})['message'] ==  \
-        'DefaultMessage'
+    assert(cl.merge_options(
+        default_opts, {'message': 'ConfMessage'})['message'] ==
+        'DefaultMessage')
