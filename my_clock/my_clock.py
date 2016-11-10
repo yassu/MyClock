@@ -7,7 +7,7 @@ import json5
 import subprocess
 from os import system
 import os.path
-from time import sleep
+import time
 
 __VERSION__ = "0.1.6"
 
@@ -60,6 +60,15 @@ class IllegalJson5Error(ValueError):
 
 class NotDefinedTaskError(ValueError):
     """ Illegal Json5 syntax """
+
+
+def spend_time(_time):
+    t = _time//60
+    for cnt in range(t):
+        for j in range(60):
+            time.sleep(1)
+    for j in range(_time - 60*t):
+        time.sleep(1)
 
 
 def get_option_value(opt_name, default_value, input_opts, conf_opts):
@@ -271,7 +280,7 @@ def main():
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
         print('begin {} time'.format(opts.task))
-    sleep(sleep_time)
+    time.sleep(sleep_time)
     if not options['hide_popup']:
         notify(options)
 
@@ -282,4 +291,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    spend_time(60 * 25)
