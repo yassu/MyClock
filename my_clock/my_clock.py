@@ -272,13 +272,13 @@ def main():
     if options["verbose"]:
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
-        print('begin {} task'.format(opts.task))
+        print('begin {} time'.format(opts.task))
     sleep(sleep_time)
     if not options['hide_popup']:
         notify(options)
 
     if options["verbose"]:
-        print('finished {} task'.format(opts.task))
+        print('finished {} time'.format(opts.task))
     if options['ring_bell'] and executable_afplay():
         afplay(options)
 
