@@ -1,7 +1,7 @@
 MyClock
 =========
 
-*version: 0.1.6*
+*version: 0.1.7*
 
 MyClock is a simple and "programmable" clock program.
 
@@ -45,12 +45,15 @@ Options
 
 - `--version`: show program's version number and exit
 - `-h`, `--help`: show this help message and exit
+- `-V`, `--verbose`: verbose
 - `-g MESSAGE`, `--message=MESSAGE`: set message string default: "MyClock"
 - `-t TITLE`, `--title=TITLE`: set title string. default: "MyClock"
-- `-T TASK`, `--task=TASK`:  set task string default: "default"
-- `-V`, `--verbose`: verbose
-- `-f {filename}`, `--conf-file {filename}`: set configure filename string default: "~/.clock.json"
+- `-o`, `--out_log`: out log to stdout
 - `-r`, `--ring-bell`: ring bell or not after timer
+- `-b BELL_SOUND`, `--bell-sound BELL_SOUND`: mp3 file of bell_sound
+- `hide-popup`: don't show popup
+- `-T TASK`, `--task=TASK`:  set task string default: "default"
+- `-f {filename}`, `--conf-file {filename}`: set configure filename string default: "~/.clock.json"
 - `-l`, `--list`: show task names
 
 About Configure File

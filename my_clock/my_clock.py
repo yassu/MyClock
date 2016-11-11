@@ -191,7 +191,7 @@ def get_option_parser():
         '--out_log', '-o',
         action='store_true',
         dest='out_log',
-        help='out_log string')
+        help='out log to stdout')
     parser.add_option(
         '-r', '--ring-bell',
         action='store_true',
