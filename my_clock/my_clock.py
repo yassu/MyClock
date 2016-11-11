@@ -62,20 +62,16 @@ class NotDefinedTaskError(ValueError):
     """ Illegal Json5 syntax """
 
 
-def spend_time(_time, out_f=None):
+def spend_time(_time, out_log=None):
+    if not out_log:
+        time.sleep(_time)
+        return
+
     t = _time//60
     spent_time = 0
-    for cnt in range(t):
-        for j in range(60):
-            time.sleep(1)
-            spent_time += 1
-            if out_f is not None:
-                print(spent_time, file=out_f)
-    for j in range(_time - 60*t):
+    for j in range(_time):
         time.sleep(1)
-        spent_time += 1
-        if out_f is not None:
-            print(spent_time, file=out_f)
+        print(j)
 
 
 def get_option_value(opt_name, default_value, input_opts, conf_opts):
@@ -191,6 +187,12 @@ def get_option_parser():
         dest='title',
         help='set title string')
     parser.add_option(
+        '--out_log', '-o',
+        action='store_true',
+        dest='out_log',
+        default=False,
+        help='out_log string')
+    parser.add_option(
         '-r', '--ring-bell',
         action='store_true',
         dest='ring_bell',
@@ -287,7 +289,7 @@ def main():
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
         print('begin {} time'.format(opts.task))
-    time.sleep(sleep_time)
+    spend_time(sleep_time, out_log=opts.out_log)
     if not options['hide_popup']:
         notify(options)
 
