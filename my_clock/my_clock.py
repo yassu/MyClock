@@ -67,7 +67,7 @@ def spend_time(_time, out_log=None):
         time.sleep(_time)
         return
 
-    for j in range(_time):
+    for j in range(1, _time + 1):
         time.sleep(1)
         print(j)
 
@@ -156,6 +156,7 @@ def merge_options(default_opts, conf_opts):
                                   conf_opts),
         'ring_bell': get_option_value('ring_bell', False, default_opts,
                                       conf_opts),
+        'out_log': get_option_value('out_log', False, default_opts, conf_opts),
         'bell_sound': get_option_value('bell_sound', False, default_opts,
                                        conf_opts),
         'hide_popup': get_option_value('hide_popup', False, default_opts,
@@ -188,7 +189,6 @@ def get_option_parser():
         '--out_log', '-o',
         action='store_true',
         dest='out_log',
-        default=False,
         help='out_log string')
     parser.add_option(
         '-r', '--ring-bell',
@@ -250,6 +250,7 @@ def main():
         'ring_bell': opts.ring_bell,
         'bell_sound': opts.bell_sound,
         'hide_popup': opts.hide_popup,
+        'out_log': opts.out_log,
         'time': args
     },
         options)
@@ -287,12 +288,14 @@ def main():
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
         print('begin {} time'.format(opts.task))
-    spend_time(sleep_time, out_log=opts.out_log)
+    spend_time(sleep_time, out_log=options['out_log'])
+
     if not options['hide_popup']:
         notify(options)
 
     if options["verbose"]:
         print('finished {} time'.format(opts.task))
+
     if options['ring_bell'] and executable_afplay():
         afplay(options)
 
