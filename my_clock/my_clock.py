@@ -67,8 +67,6 @@ def spend_time(_time, out_log=None):
         time.sleep(_time)
         return
 
-    t = _time//60
-    spent_time = 0
     for j in range(_time):
         time.sleep(1)
         print(j)
