@@ -163,7 +163,7 @@ def merge_options(default_opts, conf_opts):
                                        conf_opts),
         'hide_popup': get_option_value('hide_popup', False, default_opts,
                                        conf_opts),
-        'time': get_option_value('time', [], default_opts, conf_opts)
+        'time': get_option_value('args', [], default_opts, conf_opts)
     }
 
 
@@ -209,6 +209,12 @@ def get_option_parser():
         dest='hide_popup',
         help="don't show popup"
     )
+    parser.add_option(
+        '--args-as-tasks',
+        action='store_true',
+        dest='args_as_tasks',
+        help="input task name from arg"
+    )
 
     # not conf opts
     parser.add_option(
@@ -253,7 +259,7 @@ def main():
         'bell_sound': opts.bell_sound,
         'hide_popup': opts.hide_popup,
         'out_log': opts.out_log,
-        'time': args
+        'args': args
     },
         options)
 
