@@ -9,7 +9,7 @@ from os import system
 import os.path
 import time
 
-__VERSION__ = "0.1.6"
+__VERSION__ = "0.1.7"
 
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
