@@ -58,6 +58,7 @@ def afplay(options):
 class IllegalJson5Error(ValueError):
     """ Illegal Json5 syntax """
 
+
 class NotDefinedTaskError(ValueError):
     """ Illegal Json5 syntax """
 
@@ -97,9 +98,10 @@ def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
                     '{}'.format(conf_filename, ex.args[0]))
         else:
             try:
-                if task_name not in get_task_names(conf_filename=conf_filename):
+                if task_name not in \
+                        get_task_names(conf_filename=conf_filename):
                     raise NotDefinedTaskError('{} task is not defined.'.format(
-                                               task_name))
+                        task_name))
                 return json5.load(jf).get(task_name, {})
             except Exception as ex:
                 raise IllegalJson5Error(
