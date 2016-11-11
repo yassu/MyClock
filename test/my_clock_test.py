@@ -12,6 +12,7 @@ def get_default_opts():
         'show_tasks': None,
         'verbose': None,
         'ring_bell': None,
+        'out_log': None,
         'time': [],
         'hide_popup': None,
         'bell_sound': None,
@@ -115,8 +116,7 @@ def get_option_value_test2():
 def get_option_value_test3():
     """ conf_optsだけ入力する場合のMessage """
     assert(cl.get_option_value('message', cl.DEFAULT_MESSAGE,
-                               get_default_opts(), {'message': 'TestMessage'})
-                               == 'TestMessage')
+           get_default_opts(), {'message': 'TestMessage'}) == 'TestMessage')
 
 
 def get_option_value_test4():
@@ -130,7 +130,7 @@ def get_option_value_test4():
 def get_option_value_test2_1():
     """ input_opts, conf_optsに何も入力しない場合のverbose """
     assert (cl.get_option_value('verbose', False, get_default_opts(),
-                               {}) is False)
+                                {}) is False)
 
 
 def get_option_value_test2_2():
