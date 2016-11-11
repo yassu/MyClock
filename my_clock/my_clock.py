@@ -38,7 +38,8 @@ def get_terminal_escape(s):
 
 
 def notify(options):
-    run_cmd('terminal-notifier -title {} -message {} -sound default'.format(
+    run_cmd('terminal-notifier {} -title {} -message {} -sound default'.format(
+        options['terminal_notify_options'],
         get_terminal_escape(options['title']),
         get_terminal_escape(options['message'])), options)
 
@@ -52,7 +53,7 @@ def executable_afplay():
 
 
 def afplay(options):
-    run_cmd('afplay {}'.format(DEFAULT_BELL_SOUND_FILENAME), options)
+    run_cmd('afplay {}'.format(options['bell_sound']), options)
 
 
 class IllegalJson5Error(ValueError):
@@ -159,8 +160,10 @@ def merge_options(default_opts, conf_opts):
         'ring_bell': get_option_value('ring_bell', False, default_opts,
                                       conf_opts),
         'out_log': get_option_value('out_log', False, default_opts, conf_opts),
-        'bell_sound': get_option_value('bell_sound', False, default_opts,
+        'bell_sound': get_option_value('bell_sound', DEFAULT_BELL_SOUND_FILENAME, default_opts,
                                        conf_opts),
+        'terminal_notify_options': get_option_value('terminal_notify_options',
+                                        '', default_opts, conf_opts),
         'hide_popup': get_option_value('hide_popup', False, default_opts,
                                        conf_opts),
         'time': get_option_value('args', [], default_opts, conf_opts)
@@ -203,6 +206,11 @@ def get_option_parser():
         action='store',
         dest='bell_sound',
         help='mp3 file of bell_sound')
+    parser.add_option(
+        '--terminal-notify-options',
+        action='store',
+        dest='terminal_notify_options',
+        help='options of terminal notify')
     parser.add_option(
         '--hide-popup',
         action='store_true',
@@ -257,6 +265,7 @@ def main():
         'show_tasks': opts.show_tasks,
         'ring_bell': opts.ring_bell,
         'bell_sound': opts.bell_sound,
+        'terminal_notify_options': opts.terminal_notify_options,
         'hide_popup': opts.hide_popup,
         'out_log': opts.out_log,
         'args': args
