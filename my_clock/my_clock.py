@@ -62,13 +62,20 @@ class NotDefinedTaskError(ValueError):
     """ Illegal Json5 syntax """
 
 
-def spend_time(_time):
+def spend_time(_time, out_f=None):
     t = _time//60
+    spent_time = 0
     for cnt in range(t):
         for j in range(60):
             time.sleep(1)
+            spent_time += 1
+            if out_f is not None:
+                print(spent_time, file=out_f)
     for j in range(_time - 60*t):
         time.sleep(1)
+        spent_time += 1
+        if out_f is not None:
+            print(spent_time, file=out_f)
 
 
 def get_option_value(opt_name, default_value, input_opts, conf_opts):
@@ -291,5 +298,4 @@ def main():
 
 
 if __name__ == '__main__':
-    # main()
-    spend_time(60 * 25)
+    main()
