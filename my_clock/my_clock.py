@@ -100,7 +100,6 @@ def spend_time(_time, out_log=None):
     for j in range(1, _time + 1):
         time.sleep(1)
         print(j)
-    print(time.time() - start_time)
 
 
 def get_option_value(opt_name, default_value,
