@@ -13,9 +13,10 @@ def get_default_opts():
         'verbose': None,
         'ring_bell': None,
         'out_log': None,
-        'time': [],
+        'args': [],
         'hide_popup': None,
         'bell_sound': None,
+        'terminal_notify_options': None
     }
 
 
