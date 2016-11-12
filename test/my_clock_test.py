@@ -12,6 +12,7 @@ def get_input_opts():
         'show_tasks': None,
         'verbose': None,
         'ring_bell': None,
+        'play_bgm': None,
         'out_log': None,
         'time': [],
         'hide_popup': None,

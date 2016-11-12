@@ -3,11 +3,14 @@
 
 from optparse import OptionParser
 import sys
+import threading
 import json5
 import subprocess
 from os import system
 import os.path
 import time
+import wave
+import pyaudio
 
 __VERSION__ = "0.1.8"
 
@@ -16,7 +19,9 @@ DEFAULT_MESSAGE = 'MyClock'
 DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
 DEFAULT_TASK_NAME = 'default'
 DEFAULT_BELL_SOUND_FILENAME = os.path.abspath(
-    os.path.dirname(os.path.abspath(__file__)) + '/music/default_bell.mp3')
+    os.path.dirname(os.path.abspath(__file__)) + '/music/default_bell.wav')
+DEFAULT_BGM_SOUND = os.path.abspath(
+    os.path.dirname(os.path.abspath(__file__)) + '/music/ticking.wav')
 
 
 def run_cmd(cmd, options):
@@ -37,6 +42,22 @@ def get_terminal_escape(s):
     return "'{}'".format(s)
 
 
+class PlayThread(threading.Thread):
+    def __init__(self, confs):
+        super(PlayThread, self).__init__()
+        self._confs = confs
+
+    def run(self):
+        start_time = time.time()
+        now_time = start_time
+
+        while now_time <= start_time + self._confs['time']:
+            play_wav({
+                 'verbose': False,
+                 'wav_filename': self._confs['wav_filename'],
+                 'time': self._confs['time'] - (now_time - start_time)})
+            now_time = time.time()
+
 def notify(options):
     run_cmd('terminal-notifier {} -title {} -message {} -sound default'.format(
         options['terminal_notify_options'],
@@ -44,17 +65,23 @@ def notify(options):
         get_terminal_escape(options['message'])), options)
 
 
-def executable_afplay():
-    try:
-        subprocess.check_output(['which', 'afplay'])
-        return True
-    except subprocess.CalledProcessError:
-        return False
+def play_wav(confs):
+    wf = wave.open(confs['wav_filename'], "r")
+    p = pyaudio.PyAudio()
+    stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                    channels=wf.getnchannels(),
+                    rate=wf.getframerate(),
+                    output=True)
 
-
-def afplay(options):
-    run_cmd('afplay {} {}'.format(options['afplay_options'],
-                                  options['bell_sound']), options)
+    data = wf.readframes(1024)
+    start_time = time.time()
+    while(data != b''):
+        stream.write(data)
+        data = wf.readframes(1024)
+        if 'time' in confs and time.time() - start_time >= confs['time']:
+            return
+    stream.close()
+    p.terminate()
 
 
 class IllegalJson5Error(ValueError):
@@ -64,12 +91,12 @@ class IllegalJson5Error(ValueError):
 class NotDefinedTaskError(ValueError):
     """ Illegal Json5 syntax """
 
-
 def spend_time(_time, out_log=None):
     if not out_log:
         time.sleep(_time)
         return
 
+    start_time = time.time()
     for j in range(1, _time + 1):
         time.sleep(1)
         print(j)
@@ -170,12 +197,15 @@ def merge_options(input_opts, conf_opts):
                 'bell_sound',
                 DEFAULT_BELL_SOUND_FILENAME, input_opts,
                 conf_opts),
+        'play_bgm': get_option_value(
+                'play_bgm', False,
+                input_opts, conf_opts),
+        'bgm_filename': get_option_value(
+                'bgm_filename', DEFAULT_BGM_SOUND,
+                input_opts, conf_opts),
         'terminal_notify_options': get_option_value(
                 'terminal_notify_options',
                 '', input_opts, conf_opts),
-        'afplay_options': get_option_value(
-                'afplay_options', '',
-                input_opts, conf_opts),
         'hide_popup': get_option_value('hide_popup', False, input_opts,
                                        conf_opts),
         'time': get_option_value('time', [], input_opts, conf_opts)
@@ -219,15 +249,20 @@ def get_option_parser():
         dest='bell_sound',
         help='mp3 file of bell_sound')
     parser.add_option(
+        '--bgm', '--play-bgm',
+        action='store_true',
+        dest='play_bgm',
+        help='play bgm sound')
+    parser.add_option(
+        '--bgm-sound',
+        action='store',
+        dest='bgm_filename',
+        help='bgm filename')
+    parser.add_option(
         '--terminal-notify-options',
         action='store',
         dest='terminal_notify_options',
         help='options of terminal notify')
-    parser.add_option(
-        '--afplay-options',
-        action='store',
-        dest='afplay_options',
-        help='options of afplay')
     parser.add_option(
         '--hide-popup',
         action='store_true',
@@ -282,8 +317,9 @@ def main():
         'show_tasks': opts.show_tasks,
         'ring_bell': opts.ring_bell,
         'bell_sound': opts.bell_sound,
+        'play_bgm': opts.play_bgm,
+        'bgm_filename': opts.bgm_filename,
         'terminal_notify_options': opts.terminal_notify_options,
-        'afplay_options': opts.afplay_options,
         'hide_popup': opts.hide_popup,
         'out_log': opts.out_log,
         'time': args if len(args) > 0 else None
@@ -310,14 +346,12 @@ def main():
         sys.stderr.write('Please install terminal_notifier\n')
         sys.exit()
 
-    if options['ring_bell'] and not executable_afplay():
-        sys.stderr.write('Please install afplay\n')
-        sys.exit()
-
     if options['hide_popup'] and not options['ring_bell']:
         sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
         sys.exit()
-
+    if options['play_bgm']:
+        th = PlayThread({'wav_filename': options['bgm_filename'], 'time': sleep_time})
+        th.start()
     if options["verbose"]:
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
@@ -330,8 +364,8 @@ def main():
     if options["verbose"]:
         print('finished {} time'.format(opts.task))
 
-    if options['ring_bell'] and executable_afplay():
-        afplay(options)
+    if options['ring_bell']:
+        play_wav({'wav_filename': DEFAULT_BELL_SOUND_FILENAME})
 
 
 if __name__ == '__main__':
