@@ -15,13 +15,11 @@ install:
   - sudo apt-get install libportaudio-dev
 
   - pip install nose
-  - pip install coveralls
   - pip install json5
   - pip install flake8
 
 script:
   - nosetests
-  - coverage run test/my_clock_test.py
   - flake8
 after_success:
   - coveralls
