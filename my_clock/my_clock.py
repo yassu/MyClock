@@ -10,7 +10,6 @@ from os import system
 import os.path
 import time
 import wave
-import pyaudio
 
 __VERSION__ = "0.1.8"
 
@@ -68,6 +67,7 @@ def notify(options):
 
 
 def play_wav(confs):
+    import pyaudio
     wf = wave.open(confs['wav_filename'], "r")
     p = pyaudio.PyAudio()
     stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
