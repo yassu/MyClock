@@ -9,6 +9,8 @@ import subprocess
 from os import system
 import os.path
 import time
+import wave
+import pyaudio
 
 __VERSION__ = "0.1.8"
 
@@ -17,7 +19,7 @@ DEFAULT_MESSAGE = 'MyClock'
 DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
 DEFAULT_TASK_NAME = 'default'
 DEFAULT_BELL_SOUND_FILENAME = os.path.abspath(
-    os.path.dirname(os.path.abspath(__file__)) + '/music/default_bell.mp3')
+    os.path.dirname(os.path.abspath(__file__)) + '/music/default_bell.wav')
 
 
 def run_cmd(cmd, options):
@@ -43,6 +45,7 @@ class AfplayThread(threading.Thread):
         super(AfplayThread, self).__init__()
 
     def run(self):
+        time.sleep(1)
         afplay({'afplay_options': '',
              'verbose': False,
              'bell_sound': DEFAULT_BELL_SOUND_FILENAME})
@@ -63,8 +66,20 @@ def executable_afplay():
 
 
 def afplay(options):
-    run_cmd('afplay {} {}'.format(options['afplay_options'],
-                                  options['bell_sound']), options)
+    wf = wave.open(options['bell_sound'], "r")
+    # ストリーム開始
+    p = pyaudio.PyAudio()
+    stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                    channels=wf.getnchannels(),
+                    rate=wf.getframerate(),
+                    output=True)
+
+    data = wf.readframes(1024)
+    while(data != b''):
+        stream.write(data)
+        data = wf.readframes(1024)
+    stream.close()      # ストリーム終了
+    p.terminate()
 
 
 class IllegalJson5Error(ValueError):
@@ -327,6 +342,7 @@ def main():
         sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
         sys.exit()
     th = AfplayThread()
+    print(dir(th))
     th.start()
     if options["verbose"]:
         print('options: {}'.format(str(options)))
