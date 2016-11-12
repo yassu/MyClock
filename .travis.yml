@@ -6,6 +6,8 @@ python:
   - 3.5
 
 install:
+  - sudo apt-get install libportaudio-dev
+
   - pip install nose
   - pip install pyaudio
   - pip install coveralls
