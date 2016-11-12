@@ -3,6 +3,7 @@
 
 from optparse import OptionParser
 import sys
+import threading
 import json5
 import subprocess
 from os import system
@@ -37,6 +38,15 @@ def get_terminal_escape(s):
     return "'{}'".format(s)
 
 
+class AfplayThread(threading.Thread):
+    def __init__(self):
+        super(AfplayThread, self).__init__()
+
+    def run(self):
+        afplay({'afplay_options': '',
+             'verbose': False,
+             'bell_sound': DEFAULT_BELL_SOUND_FILENAME})
+
 def notify(options):
     run_cmd('terminal-notifier {} -title {} -message {} -sound default'.format(
         options['terminal_notify_options'],
@@ -63,7 +73,6 @@ class IllegalJson5Error(ValueError):
 
 class NotDefinedTaskError(ValueError):
     """ Illegal Json5 syntax """
-
 
 def spend_time(_time, out_log=None):
     if not out_log:
@@ -317,7 +326,8 @@ def main():
     if options['hide_popup'] and not options['ring_bell']:
         sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
         sys.exit()
-
+    th = AfplayThread()
+    th.start()
     if options["verbose"]:
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
