@@ -20,7 +20,7 @@ DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
 DEFAULT_TASK_NAME = 'default'
 DEFAULT_BELL_SOUND_FILENAME = os.path.abspath(
     os.path.dirname(os.path.abspath(__file__)) + '/music/default_bell.wav')
-DEFAULT_BETWEEN_SOUND = os.path.abspath(
+DEFAULT_BGM_SOUND = os.path.abspath(
     os.path.dirname(os.path.abspath(__file__)) + '/music/ticking.wav')
 
 
@@ -196,6 +196,9 @@ def merge_options(input_opts, conf_opts):
                 'bell_sound',
                 DEFAULT_BELL_SOUND_FILENAME, input_opts,
                 conf_opts),
+        'play_bgm': get_option_value(
+                'play_bgm', False,
+                input_opts, conf_opts),
         'terminal_notify_options': get_option_value(
                 'terminal_notify_options',
                 '', input_opts, conf_opts),
@@ -241,6 +244,11 @@ def get_option_parser():
         action='store',
         dest='bell_sound',
         help='mp3 file of bell_sound')
+    parser.add_option(
+        '--bgm', '--play-bgm',
+        action='store_true',
+        dest='play_bgm',
+        help='play bgm sound')
     parser.add_option(
         '--terminal-notify-options',
         action='store',
@@ -300,6 +308,7 @@ def main():
         'show_tasks': opts.show_tasks,
         'ring_bell': opts.ring_bell,
         'bell_sound': opts.bell_sound,
+        'play_bgm': opts.play_bgm,
         'terminal_notify_options': opts.terminal_notify_options,
         'hide_popup': opts.hide_popup,
         'out_log': opts.out_log,
@@ -330,8 +339,9 @@ def main():
     if options['hide_popup'] and not options['ring_bell']:
         sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
         sys.exit()
-    th = PlayThread({'wav_filename': DEFAULT_BETWEEN_SOUND, 'time': sleep_time})
-    th.start()
+    if opts.play_bgm:
+        th = PlayThread({'wav_filename': DEFAULT_BGM_SOUND, 'time': sleep_time})
+        th.start()
     if options["verbose"]:
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
