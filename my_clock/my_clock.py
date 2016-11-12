@@ -41,13 +41,15 @@ def get_terminal_escape(s):
 
 
 class PlayThread(threading.Thread):
-    def __init__(self):
+    def __init__(self, confs):
         super(PlayThread, self).__init__()
+        self._confs = confs
 
     def run(self):
-        play_wav({'afplay_options': '',
+        play_wav({
              'verbose': False,
-             'wav_filename': DEFAULT_BELL_SOUND_FILENAME})
+             'wav_filename': self._confs['wav_filename'],
+             'time': self._confs['time']})
 
 def notify(options):
     run_cmd('terminal-notifier {} -title {} -message {} -sound default'.format(
@@ -70,7 +72,7 @@ def play_wav(confs):
     while(data != b''):
         stream.write(data)
         data = wf.readframes(1024)
-        if time.time() - start_time >= 3:
+        if 'time' in confs and time.time() - start_time >= confs['time']:
             return
     stream.close()
     p.terminate()
@@ -322,7 +324,7 @@ def main():
     if options['hide_popup'] and not options['ring_bell']:
         sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
         sys.exit()
-    th = PlayThread()
+    th = PlayThread({'wav_filename': options['bell_sound'], 'time': sleep_time})
     print(dir(th))
     th.start()
     if options["verbose"]:
