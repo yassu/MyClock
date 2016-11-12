@@ -11,8 +11,8 @@ os:
 before_install:
     - sudo apt-get update
 install:
-  - sudo apt-get install libportaudio-dev
   - sudo apt-get install python-dev
+  - sudo apt-get install libportaudio-dev
 
   - pip install nose
   - pip install pyaudio
