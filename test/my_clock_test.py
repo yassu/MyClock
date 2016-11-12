@@ -13,6 +13,7 @@ def get_input_opts():
         'verbose': None,
         'ring_bell': None,
         'play_bgm': None,
+        'bgm_filename': None,
         'out_log': None,
         'time': [],
         'hide_popup': None,
