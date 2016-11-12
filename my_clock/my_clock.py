@@ -178,7 +178,7 @@ def merge_options(default_opts, conf_opts):
                 default_opts, conf_opts),
         'hide_popup': get_option_value('hide_popup', False, default_opts,
                                        conf_opts),
-        'time': get_option_value('args', [], default_opts, conf_opts)
+        'time': get_option_value('time', [], default_opts, conf_opts)
     }
 
 
@@ -286,7 +286,7 @@ def main():
         'afplay_options': opts.afplay_options,
         'hide_popup': opts.hide_popup,
         'out_log': opts.out_log,
-        'args': args
+        'time': args if len(args) > 0 else None
     },
         options)
 
@@ -297,7 +297,6 @@ def main():
 
     try:
         if 'time' not in options:
-            print(options)
             raise TimeNotFoundError()
         sleep_time = get_time(args, options['time'])
     except TimeNotFoundError:
