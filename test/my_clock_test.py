@@ -145,7 +145,20 @@ def get_option_value_test5():
 
 
 def get_option_value_test6():
-    """ input_opts, conf_opts, hide_opts を入力する場合のMessage """
+    assert cl.get_option_value('message', cl.DEFAULT_MESSAGE,
+                               get_input_opts(), {'message': 'ConfMessage'},
+                               {'message': 'HideMessage'}) == 'ConfMessage'
+
+
+def get_option_value_test7():
+    input_opts = get_input_opts()
+    input_opts['message'] = 'InputMessage'
+    assert cl.get_option_value('message', cl.DEFAULT_MESSAGE,
+                               input_opts, {},
+                               {'message': 'HideMessage'}) == 'InputMessage'
+
+
+def get_option_value_test8():
     input_opts = get_input_opts()
     input_opts['message'] = 'InputMessage'
     assert cl.get_option_value('message', cl.DEFAULT_MESSAGE,
@@ -202,12 +215,6 @@ def get_option_value_test2_7():
     assert cl.get_option_value('verbose', False, input_opts,
                                {'verbose_opts': False}, {'verbose': False}) is\
         True
-
-
-def get_option_value_test3_0():
-    """ conf_optsだけ入力する場合のMessage """
-    cl.get_option_value('message', cl.DEFAULT_MESSAGE, get_input_opts(),
-                        {'message': 'MessageTest'}) == ''
 
 
 def merge_options_message_test1():
