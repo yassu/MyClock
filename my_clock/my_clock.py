@@ -156,29 +156,29 @@ def get_time(times, conf_times):
         return _time
 
 
-def merge_options(default_opts, conf_opts):
+def merge_options(input_opts, conf_opts):
     return {
-        'verbose': get_option_value('verbose', False, default_opts, conf_opts),
-        'message': get_option_value('message', DEFAULT_MESSAGE, default_opts,
+        'verbose': get_option_value('verbose', False, input_opts, conf_opts),
+        'message': get_option_value('message', DEFAULT_MESSAGE, input_opts,
                                     conf_opts),
-        'title': get_option_value('title', DEFAULT_TITLE, default_opts,
+        'title': get_option_value('title', DEFAULT_TITLE, input_opts,
                                   conf_opts),
-        'ring_bell': get_option_value('ring_bell', False, default_opts,
+        'ring_bell': get_option_value('ring_bell', False, input_opts,
                                       conf_opts),
-        'out_log': get_option_value('out_log', False, default_opts, conf_opts),
+        'out_log': get_option_value('out_log', False, input_opts, conf_opts),
         'bell_sound': get_option_value(
                 'bell_sound',
-                DEFAULT_BELL_SOUND_FILENAME, default_opts,
+                DEFAULT_BELL_SOUND_FILENAME, input_opts,
                 conf_opts),
         'terminal_notify_options': get_option_value(
                 'terminal_notify_options',
-                '', default_opts, conf_opts),
+                '', input_opts, conf_opts),
         'afplay_options': get_option_value(
                 'afplay_options', '',
-                default_opts, conf_opts),
-        'hide_popup': get_option_value('hide_popup', False, default_opts,
+                input_opts, conf_opts),
+        'hide_popup': get_option_value('hide_popup', False, input_opts,
                                        conf_opts),
-        'time': get_option_value('time', [], default_opts, conf_opts)
+        'time': get_option_value('time', [], input_opts, conf_opts)
     }
 
 
