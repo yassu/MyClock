@@ -21,7 +21,7 @@ install:
 
 script:
   - nosetests
-  - coverage run test.py
+  - coverage run test/my_clock_test.py
   - flake8
 after_success:
   - coveralls
