@@ -200,6 +200,9 @@ def merge_options(input_opts, conf_opts):
         'play_bgm': get_option_value(
                 'play_bgm', False,
                 input_opts, conf_opts),
+        'bgm_filename': get_option_value(
+                'bgm_filename', DEFAULT_BGM_SOUND,
+                input_opts, conf_opts),
         'terminal_notify_options': get_option_value(
                 'terminal_notify_options',
                 '', input_opts, conf_opts),
@@ -315,6 +318,7 @@ def main():
         'ring_bell': opts.ring_bell,
         'bell_sound': opts.bell_sound,
         'play_bgm': opts.play_bgm,
+        'bgm_filename': opts.bgm_filename,
         'terminal_notify_options': opts.terminal_notify_options,
         'hide_popup': opts.hide_popup,
         'out_log': opts.out_log,
@@ -346,7 +350,7 @@ def main():
         sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
         sys.exit()
     if options['play_bgm']:
-        th = PlayThread({'wav_filename': DEFAULT_BGM_SOUND, 'time': sleep_time})
+        th = PlayThread({'wav_filename': options['bgm_filename'], 'time': sleep_time})
         th.start()
     if options["verbose"]:
         print('options: {}'.format(str(options)))
