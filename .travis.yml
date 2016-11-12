@@ -7,9 +7,13 @@ python:
 
 install:
   - pip install nose
+  - pip install coveralls
   - pip install json5
   - pip install flake8
 
 script:
   - nosetests
+  - coverage run test.py
   - flake8
+after_success:
+  - coveralls
