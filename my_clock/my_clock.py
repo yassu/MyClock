@@ -40,13 +40,13 @@ def get_terminal_escape(s):
     return "'{}'".format(s)
 
 
-class AfplayThread(threading.Thread):
+class PlayThread(threading.Thread):
     def __init__(self):
-        super(AfplayThread, self).__init__()
+        super(PlayThread, self).__init__()
 
     def run(self):
         time.sleep(1)
-        afplay({'afplay_options': '',
+        play_wav({'afplay_options': '',
              'verbose': False,
              'bell_sound': DEFAULT_BELL_SOUND_FILENAME})
 
@@ -57,17 +57,8 @@ def notify(options):
         get_terminal_escape(options['message'])), options)
 
 
-def executable_afplay():
-    try:
-        subprocess.check_output(['which', 'afplay'])
-        return True
-    except subprocess.CalledProcessError:
-        return False
-
-
-def afplay(options):
+def play_wav(options):
     wf = wave.open(options['bell_sound'], "r")
-    # ストリーム開始
     p = pyaudio.PyAudio()
     stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
                     channels=wf.getnchannels(),
@@ -78,7 +69,7 @@ def afplay(options):
     while(data != b''):
         stream.write(data)
         data = wf.readframes(1024)
-    stream.close()      # ストリーム終了
+    stream.close()
     p.terminate()
 
 
@@ -197,9 +188,6 @@ def merge_options(input_opts, conf_opts):
         'terminal_notify_options': get_option_value(
                 'terminal_notify_options',
                 '', input_opts, conf_opts),
-        'afplay_options': get_option_value(
-                'afplay_options', '',
-                input_opts, conf_opts),
         'hide_popup': get_option_value('hide_popup', False, input_opts,
                                        conf_opts),
         'time': get_option_value('time', [], input_opts, conf_opts)
@@ -247,11 +235,6 @@ def get_option_parser():
         action='store',
         dest='terminal_notify_options',
         help='options of terminal notify')
-    parser.add_option(
-        '--afplay-options',
-        action='store',
-        dest='afplay_options',
-        help='options of afplay')
     parser.add_option(
         '--hide-popup',
         action='store_true',
@@ -307,7 +290,6 @@ def main():
         'ring_bell': opts.ring_bell,
         'bell_sound': opts.bell_sound,
         'terminal_notify_options': opts.terminal_notify_options,
-        'afplay_options': opts.afplay_options,
         'hide_popup': opts.hide_popup,
         'out_log': opts.out_log,
         'time': args if len(args) > 0 else None
@@ -334,14 +316,10 @@ def main():
         sys.stderr.write('Please install terminal_notifier\n')
         sys.exit()
 
-    if options['ring_bell'] and not executable_afplay():
-        sys.stderr.write('Please install afplay\n')
-        sys.exit()
-
     if options['hide_popup'] and not options['ring_bell']:
         sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
         sys.exit()
-    th = AfplayThread()
+    th = PlayThread()
     print(dir(th))
     th.start()
     if options["verbose"]:
@@ -356,8 +334,8 @@ def main():
     if options["verbose"]:
         print('finished {} time'.format(opts.task))
 
-    if options['ring_bell'] and executable_afplay():
-        afplay(options)
+    if options['ring_bell']:
+        play_wav(options)
 
 
 if __name__ == '__main__':
