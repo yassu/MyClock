@@ -43,6 +43,7 @@ def get_terminal_escape(s):
 
 
 class PlayThread(threading.Thread):
+
     def __init__(self, confs):
         super(PlayThread, self).__init__()
         self._confs = confs
@@ -53,10 +54,11 @@ class PlayThread(threading.Thread):
 
         while now_time <= start_time + self._confs['time']:
             play_wav({
-                 'verbose': False,
-                 'wav_filename': self._confs['wav_filename'],
-                 'time': self._confs['time'] - (now_time - start_time)})
+                'verbose': False,
+                'wav_filename': self._confs['wav_filename'],
+                'time': self._confs['time'] - (now_time - start_time)})
             now_time = time.time()
+
 
 def notify(options):
     run_cmd('terminal-notifier {} -title {} -message {} -sound default'.format(
@@ -91,12 +93,12 @@ class IllegalJson5Error(ValueError):
 class NotDefinedTaskError(ValueError):
     """ Illegal Json5 syntax """
 
+
 def spend_time(_time, out_log=None):
     if not out_log:
         time.sleep(_time)
         return
 
-    start_time = time.time()
     for j in range(1, _time + 1):
         time.sleep(1)
         print(j)
@@ -194,18 +196,18 @@ def merge_options(input_opts, conf_opts):
                                       conf_opts),
         'out_log': get_option_value('out_log', False, input_opts, conf_opts),
         'bell_sound': get_option_value(
-                'bell_sound',
-                DEFAULT_BELL_SOUND_FILENAME, input_opts,
-                conf_opts),
+            'bell_sound',
+            DEFAULT_BELL_SOUND_FILENAME, input_opts,
+            conf_opts),
         'play_bgm': get_option_value(
-                'play_bgm', False,
-                input_opts, conf_opts),
+            'play_bgm', False,
+            input_opts, conf_opts),
         'bgm_filename': get_option_value(
-                'bgm_filename', DEFAULT_BGM_SOUND,
-                input_opts, conf_opts),
+            'bgm_filename', DEFAULT_BGM_SOUND,
+            input_opts, conf_opts),
         'terminal_notify_options': get_option_value(
-                'terminal_notify_options',
-                '', input_opts, conf_opts),
+            'terminal_notify_options',
+            '', input_opts, conf_opts),
         'hide_popup': get_option_value('hide_popup', False, input_opts,
                                        conf_opts),
         'time': get_option_value('time', [], input_opts, conf_opts)
@@ -350,7 +352,8 @@ def main():
         sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
         sys.exit()
     if options['play_bgm']:
-        th = PlayThread({'wav_filename': options['bgm_filename'], 'time': sleep_time})
+        th = PlayThread({'wav_filename': options['bgm_filename'],
+                         'time': sleep_time})
         th.start()
     if options["verbose"]:
         print('options: {}'.format(str(options)))
