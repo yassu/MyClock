@@ -75,11 +75,14 @@ def spend_time(_time, out_log=None):
         print(j)
 
 
-def get_option_value(opt_name, default_value, input_opts, conf_opts):
+def get_option_value(opt_name, default_value,
+                     input_opts, conf_opts, hide_opts={}):
     if input_opts[opt_name] is not None:
         return input_opts[opt_name]
     elif opt_name in conf_opts and conf_opts[opt_name] is not None:
         return conf_opts[opt_name]
+    elif opt_name in hide_opts and hide_opts[opt_name] is not None:
+        return hide_opts[opt_name]
     else:
         return default_value
 
