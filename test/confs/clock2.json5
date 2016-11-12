@@ -1,0 +1,12 @@
+{
+  "pomodoro-job": {
+    "title": "Pomodoro Job",
+    "message": "finished",
+    "time": ["25m"]
+  },
+  "pomodoro-rest": {
+    "title": "Pomodoro Rest",
+    "message": "Rest is finished",
+    "time": ["5m"]
+  }
+}

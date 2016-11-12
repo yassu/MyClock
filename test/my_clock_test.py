@@ -16,6 +16,8 @@ def get_default_opts():
         'time': [],
         'hide_popup': None,
         'bell_sound': None,
+        'terminal_notify_options': None,
+        'afplay_options': None
     }
 
 
@@ -98,6 +100,13 @@ def get_task_names_test2():
     assert(set(task_names) == {"default"})
 
 
+def get_task_names_test3():
+    conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
+        '/confs/clock2.json5'
+    task_names = cl.get_task_names(conf_filename)
+    assert(set(task_names) == {"default", "pomodoro-job", "pomodoro-rest"})
+
+
 def get_option_value_test1():
     """ input_opts, conf_optsに何も入力しない場合のMessage """
     assert cl.get_option_value('message', cl.DEFAULT_MESSAGE,
@@ -116,7 +125,8 @@ def get_option_value_test2():
 def get_option_value_test3():
     """ conf_optsだけ入力する場合のMessage """
     assert(cl.get_option_value('message', cl.DEFAULT_MESSAGE,
-           get_default_opts(), {'message': 'TestMessage'}) == 'TestMessage')
+                               get_default_opts(),
+                               {'message': 'TestMessage'}) == 'TestMessage')
 
 
 def get_option_value_test4():
@@ -125,6 +135,22 @@ def get_option_value_test4():
     default_opts['message'] = 'InputMessage'
     assert cl.get_option_value('message', cl.DEFAULT_MESSAGE, default_opts,
                                {'message': 'testmessage'}) == 'InputMessage'
+
+
+def get_option_value_test5():
+    """ hide_opts だけ入力する場合のMessage """
+    assert cl.get_option_value('message', cl.DEFAULT_MESSAGE,
+                               get_default_opts(), {},
+                               {'message': 'HideMessage'}) == 'HideMessage'
+
+
+def get_option_value_test6():
+    """ input_opts, conf_opts, hide_opts を入力する場合のMessage """
+    default_opts = get_default_opts()
+    default_opts['message'] = 'InputMessage'
+    assert cl.get_option_value('message', cl.DEFAULT_MESSAGE,
+                               default_opts, {'message': 'ConfMessage'},
+                               {'message': 'HideMessage'}) == 'InputMessage'
 
 
 def get_option_value_test2_1():
@@ -161,6 +187,21 @@ def get_option_value_test2_5():
     default_opts['verbose'] = False
     assert cl.get_option_value('verbose', False, default_opts,
                                {'verbose': True}) is False
+
+
+def get_option_value_test2_6():
+    """ hide_optsだけ入力された場合 """
+    assert cl.get_option_value('verbose', False, get_default_opts(),
+                               {}, {'verbose': True}) is True
+
+
+def get_option_value_test2_7():
+    """ 全てのoptsが入力された場合 """
+    default_opts = get_default_opts()
+    default_opts['verbose'] = True
+    assert cl.get_option_value('verbose', False, default_opts,
+                               {'verbose_opts': False}, {'verbose': False}) is\
+        True
 
 
 def get_option_value_test3_0():
