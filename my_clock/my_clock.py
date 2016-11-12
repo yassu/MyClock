@@ -45,10 +45,9 @@ class PlayThread(threading.Thread):
         super(PlayThread, self).__init__()
 
     def run(self):
-        time.sleep(1)
         play_wav({'afplay_options': '',
              'verbose': False,
-             'bell_sound': DEFAULT_BELL_SOUND_FILENAME})
+             'wav_filename': DEFAULT_BELL_SOUND_FILENAME})
 
 def notify(options):
     run_cmd('terminal-notifier {} -title {} -message {} -sound default'.format(
@@ -57,8 +56,9 @@ def notify(options):
         get_terminal_escape(options['message'])), options)
 
 
-def play_wav(options):
-    wf = wave.open(options['bell_sound'], "r")
+def play_wav(confs):
+    print('play_wav')
+    wf = wave.open(confs['wav_filename'], "r")
     p = pyaudio.PyAudio()
     stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
                     channels=wf.getnchannels(),
@@ -66,9 +66,12 @@ def play_wav(options):
                     output=True)
 
     data = wf.readframes(1024)
+    start_time = time.time()
     while(data != b''):
         stream.write(data)
         data = wf.readframes(1024)
+        if time.time() - start_time >= 3:
+            return
     stream.close()
     p.terminate()
 
@@ -335,8 +338,10 @@ def main():
         print('finished {} time'.format(opts.task))
 
     if options['ring_bell']:
-        play_wav(options)
+        # play_wav(options)
+        play_wav({'wav_filename': DEFAULT_BELL_SOUND_FILENAME})
 
 
 if __name__ == '__main__':
     main()
+    # play_wav({'wav_filename': DEFAULT_BELL_SOUND_FILENAME})
