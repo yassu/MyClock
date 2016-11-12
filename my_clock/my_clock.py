@@ -366,4 +366,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # play_wav({'wav_filename': DEFAULT_BELL_SOUND_FILENAME})
