@@ -306,6 +306,11 @@ def get_option_parser():
 def main():
     opts, args = get_option_parser().parse_args()
     conf_filename = opts.conf_filename
+
+    if not os.path.isfile(conf_filename):
+        sys.stderr.write('{} is not a file.\n'.format(conf_filename))
+        sys.exit()
+
     try:
         options = get_config_options(
             conf_filename=conf_filename, task_name=opts.task)
