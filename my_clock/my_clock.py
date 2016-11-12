@@ -96,9 +96,11 @@ def spend_time(_time, out_log=None):
         time.sleep(_time)
         return
 
+    start_time = time.time()
     for j in range(1, _time + 1):
         time.sleep(1)
         print(j)
+    print(time.time() - start_time)
 
 
 def get_option_value(opt_name, default_value,
@@ -250,6 +252,11 @@ def get_option_parser():
         dest='play_bgm',
         help='play bgm sound')
     parser.add_option(
+        '--bgm-sound',
+        action='store',
+        dest='bgm_filename',
+        help='bgm filename')
+    parser.add_option(
         '--terminal-notify-options',
         action='store',
         dest='terminal_notify_options',
@@ -339,7 +346,7 @@ def main():
     if options['hide_popup'] and not options['ring_bell']:
         sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
         sys.exit()
-    if opts.play_bgm:
+    if options['play_bgm']:
         th = PlayThread({'wav_filename': DEFAULT_BGM_SOUND, 'time': sleep_time})
         th.start()
     if options["verbose"]:
