@@ -99,6 +99,11 @@ def get_task_names_test2():
     task_names = cl.get_task_names(conf_filename)
     assert(set(task_names) == {"default"})
 
+def get_task_names_test3():
+    conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
+        '/confs/clock2.json5'
+    task_names = cl.get_task_names(conf_filename)
+    assert(set(task_names) == {"default", "pomodoro-job", "pomodoro-rest"})
 
 def get_option_value_test1():
     """ input_opts, conf_optsに何も入力しない場合のMessage """
