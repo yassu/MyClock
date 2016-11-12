@@ -160,10 +160,13 @@ def merge_options(default_opts, conf_opts):
         'ring_bell': get_option_value('ring_bell', False, default_opts,
                                       conf_opts),
         'out_log': get_option_value('out_log', False, default_opts, conf_opts),
-        'bell_sound': get_option_value('bell_sound', DEFAULT_BELL_SOUND_FILENAME, default_opts,
-                                       conf_opts),
-        'terminal_notify_options': get_option_value('terminal_notify_options',
-                                        '', default_opts, conf_opts),
+        'bell_sound': get_option_value(
+                'bell_sound',
+                DEFAULT_BELL_SOUND_FILENAME, default_opts,
+                conf_opts),
+        'terminal_notify_options': get_option_value(
+                'terminal_notify_options',
+                '', default_opts, conf_opts),
         'hide_popup': get_option_value('hide_popup', False, default_opts,
                                        conf_opts),
         'time': get_option_value('args', [], default_opts, conf_opts)
