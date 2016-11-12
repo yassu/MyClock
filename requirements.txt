@@ -1,7 +1,2 @@
-docutils==0.12
-flake8==3.0.4
 json5==0.2.4
-mccabe==0.5.2
--e git+https://github.com/yassu/MyClock.git@cc46444283ad204579cf52d9782b293d620d3049#egg=my_clock
-pycodestyle==2.0.0
-pyflakes==1.2.3
+PyAudio==0.2.9
