@@ -16,7 +16,8 @@ def get_default_opts():
         'args': [],
         'hide_popup': None,
         'bell_sound': None,
-        'terminal_notify_options': None
+        'terminal_notify_options': None,
+        'afplay_options': None
     }
 
 
