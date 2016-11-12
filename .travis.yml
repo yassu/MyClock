@@ -9,7 +9,7 @@ os:
 before_install:
     - sudo apt-get update
 install:
-  - sudo apt-get install libportaudio19-dev
+  - sudo apt-get install libportaudio-dev
 
   - pip install nose
   - pip install pyaudio
