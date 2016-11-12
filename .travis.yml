@@ -4,7 +4,8 @@ python:
   - 3.3
   - 3.4
   - 3.5
-
+os:
+  - osx
 before_install:
     - sudo apt-get update
 install:
