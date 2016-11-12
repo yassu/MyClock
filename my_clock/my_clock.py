@@ -20,6 +20,8 @@ DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
 DEFAULT_TASK_NAME = 'default'
 DEFAULT_BELL_SOUND_FILENAME = os.path.abspath(
     os.path.dirname(os.path.abspath(__file__)) + '/music/default_bell.wav')
+DEFAULT_BETWEEN_SOUND = os.path.abspath(
+    os.path.dirname(os.path.abspath(__file__)) + '/music/ticking.wav')
 
 
 def run_cmd(cmd, options):
@@ -46,10 +48,15 @@ class PlayThread(threading.Thread):
         self._confs = confs
 
     def run(self):
-        play_wav({
-             'verbose': False,
-             'wav_filename': self._confs['wav_filename'],
-             'time': self._confs['time']})
+        start_time = time.time()
+        now_time = start_time
+
+        while now_time <= start_time + self._confs['time']:
+            play_wav({
+                 'verbose': False,
+                 'wav_filename': self._confs['wav_filename'],
+                 'time': self._confs['time'] - (now_time - start_time)})
+            now_time = time.time()
 
 def notify(options):
     run_cmd('terminal-notifier {} -title {} -message {} -sound default'.format(
@@ -59,7 +66,6 @@ def notify(options):
 
 
 def play_wav(confs):
-    print('play_wav')
     wf = wave.open(confs['wav_filename'], "r")
     p = pyaudio.PyAudio()
     stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
@@ -324,8 +330,7 @@ def main():
     if options['hide_popup'] and not options['ring_bell']:
         sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
         sys.exit()
-    th = PlayThread({'wav_filename': options['bell_sound'], 'time': sleep_time})
-    print(dir(th))
+    th = PlayThread({'wav_filename': DEFAULT_BETWEEN_SOUND, 'time': sleep_time})
     th.start()
     if options["verbose"]:
         print('options: {}'.format(str(options)))
@@ -340,7 +345,6 @@ def main():
         print('finished {} time'.format(opts.task))
 
     if options['ring_bell']:
-        # play_wav(options)
         play_wav({'wav_filename': DEFAULT_BELL_SOUND_FILENAME})
 
 
