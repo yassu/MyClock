@@ -15,7 +15,6 @@ install:
   - sudo apt-get install libportaudio-dev
 
   - pip install nose
-  - pip install pyaudio
   - pip install coveralls
   - pip install json5
   - pip install flake8
