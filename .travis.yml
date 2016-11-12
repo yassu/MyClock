@@ -5,7 +5,7 @@ python:
   - 3.4
   - 3.5
 os:
-  - osx
+  - linux
 before_install:
     - sudo apt-get update
 install:
