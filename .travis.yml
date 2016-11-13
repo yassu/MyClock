@@ -14,5 +14,3 @@ install:
 script:
   - nosetests
   - flake8
-after_success:
-  - coveralls
