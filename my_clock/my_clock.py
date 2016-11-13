@@ -330,6 +330,11 @@ def main():
     try:
         options = get_config_options(
             conf_filename=conf_filename, task_name=opts.task)
+        if "_" in get_task_names(conf_filename=conf_filename):
+            hide_options = get_config_options(
+                conf_filename=conf_filename, task_name='_')
+        else:
+            hide_options = {}
     except IllegalJson5Error as ex:
         sys.stderr.write(ex.args[0] + '\n')
         sys.exit()
@@ -347,7 +352,7 @@ def main():
         'out_log': opts.out_log,
         'time': args if len(args) > 0 else None
     },
-        options)
+        options, hide_options)
 
     if opts.show_tasks:
         for name in get_task_names(conf_filename):
