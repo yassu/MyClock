@@ -67,6 +67,13 @@ def get_config_options_test2():
 
 def get_config_options_test3():
     conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
+        '/confs/not_exists.json5'
+    options = cl.get_config_options(conf_filename, task_name=None)
+    assert(options == {})
+
+
+def get_config_options_test3():
+    conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
         '/confs/clock1.json5'
     options = cl.get_config_options(conf_filename, task_name=None)
     assert(options == {
