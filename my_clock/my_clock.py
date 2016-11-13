@@ -28,8 +28,10 @@ def run_cmd(cmd, options):
         print('Run command: {}'.format(cmd))
     system(cmd)
 
+
 def bye_decorator(func):
     import functools
+
     @functools.wraps(func)
     def wrapper(*args, **kargs):
         try:
@@ -38,7 +40,6 @@ def bye_decorator(func):
             print('bye')
             sys.exit()
     return wrapper
-
 
 
 def executable_terminal_notifier():
@@ -208,13 +209,13 @@ def merge_options(input_opts, conf_opts, hide_opts):
         'title': get_option_value('title', DEFAULT_TITLE,
                                   input_opts, conf_opts, hide_opts),
         'ring_bell': get_option_value('ring_bell', False,
-                                  input_opts, conf_opts, hide_opts),
+                                      input_opts, conf_opts, hide_opts),
         'out_log': get_option_value('out_log', False,
                                     input_opts, conf_opts, hide_opts),
         'bell_sound': get_option_value(
             'bell_sound',
             DEFAULT_BELL_SOUND_FILENAME,
-             input_opts, conf_opts, hide_opts),
+            input_opts, conf_opts, hide_opts),
         'play_bgm': get_option_value(
             'play_bgm', False,
             input_opts, conf_opts, hide_opts),
