@@ -199,32 +199,34 @@ def get_time(times, conf_times):
         return _time
 
 
-def merge_options(input_opts, conf_opts):
+def merge_options(input_opts, conf_opts, hide_opts):
     return {
-        'verbose': get_option_value('verbose', False, input_opts, conf_opts),
-        'message': get_option_value('message', DEFAULT_MESSAGE, input_opts,
-                                    conf_opts),
-        'title': get_option_value('title', DEFAULT_TITLE, input_opts,
-                                  conf_opts),
-        'ring_bell': get_option_value('ring_bell', False, input_opts,
-                                      conf_opts),
-        'out_log': get_option_value('out_log', False, input_opts, conf_opts),
+        'verbose': get_option_value('verbose', False,
+                                    input_opts, conf_opts, hide_opts),
+        'message': get_option_value('message', DEFAULT_MESSAGE,
+                                    input_opts, conf_opts, hide_opts),
+        'title': get_option_value('title', DEFAULT_TITLE,
+                                  input_opts, conf_opts, hide_opts),
+        'ring_bell': get_option_value('ring_bell', False,
+                                  input_opts, conf_opts, hide_opts),
+        'out_log': get_option_value('out_log', False,
+                                    input_opts, conf_opts, hide_opts),
         'bell_sound': get_option_value(
             'bell_sound',
-            DEFAULT_BELL_SOUND_FILENAME, input_opts,
-            conf_opts),
+            DEFAULT_BELL_SOUND_FILENAME,
+             input_opts, conf_opts, hide_opts),
         'play_bgm': get_option_value(
             'play_bgm', False,
-            input_opts, conf_opts),
+            input_opts, conf_opts, hide_opts),
         'bgm_filename': get_option_value(
             'bgm_filename', DEFAULT_BGM_SOUND,
-            input_opts, conf_opts),
+            input_opts, conf_opts, hide_opts),
         'terminal_notify_options': get_option_value(
             'terminal_notify_options',
-            '', input_opts, conf_opts),
+            '', input_opts, conf_opts, hide_opts),
         'hide_popup': get_option_value('hide_popup', False, input_opts,
-                                       conf_opts),
-        'time': get_option_value('time', [], input_opts, conf_opts)
+                                       conf_opts, hide_opts),
+        'time': get_option_value('time', [], input_opts, conf_opts, hide_opts)
     }
 
 

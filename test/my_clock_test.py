@@ -221,15 +221,13 @@ def get_option_value_test2_7():
 
 def merge_options_message_test1():
     """ なにもOptionがない場合のmessageのテスト """
-    print('test')
-    print(cl.merge_options(get_input_opts(), {})['message'])
-    assert cl.merge_options(get_input_opts(), {})['message'] == \
+    assert cl.merge_options(get_input_opts(), {}, {})['message'] == \
         cl.DEFAULT_MESSAGE
 
 
 def merge_options_message_test2():
     """ ConfだけOptionがある場合のmessageのテスト """
-    assert cl.merge_options(get_input_opts(), {'message': 'ConfMessage'}
+    assert cl.merge_options(get_input_opts(), {'message': 'ConfMessage'}, {}
                             )['message'] == 'ConfMessage'
 
 
@@ -237,7 +235,7 @@ def merge_options_message_test3():
     """ inputだけOptionがある場合のmessageのテスト """
     input_opts = get_input_opts()
     input_opts['message'] = 'DefaultMessage'
-    assert cl.merge_options(input_opts, {})['message'] == 'DefaultMessage'
+    assert cl.merge_options(input_opts, {}, {})['message'] == 'DefaultMessage'
 
 
 def merge_options_message_test4():
@@ -245,5 +243,5 @@ def merge_options_message_test4():
     input_opts = get_input_opts()
     input_opts['message'] = 'DefaultMessage'
     assert(cl.merge_options(
-        input_opts, {'message': 'ConfMessage'})['message'] ==
+        input_opts, {'message': 'ConfMessage'}, {})['message'] ==
         'DefaultMessage')
