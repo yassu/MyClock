@@ -28,6 +28,18 @@ def run_cmd(cmd, options):
         print('Run command: {}'.format(cmd))
     system(cmd)
 
+def bye_decorator(func):
+    import functools
+    @functools.wraps(func)
+    def wrapper(*args, **kargs):
+        try:
+            func(*args, **kargs)
+        except KeyboardInterrupt:
+            print('bye')
+            sys.exit()
+    return wrapper
+
+
 
 def executable_terminal_notifier():
     try:
@@ -94,6 +106,7 @@ class NotDefinedTaskError(ValueError):
     """ Illegal Json5 syntax """
 
 
+@bye_decorator
 def spend_time(_time, out_log=None):
     if not out_log:
         time.sleep(_time)
