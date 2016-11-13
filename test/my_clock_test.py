@@ -72,7 +72,7 @@ def get_config_options_test3():
     assert(options == {})
 
 
-def get_config_options_test3():
+def get_config_options_test4():
     conf_filename = os.path.dirname(os.path.abspath(__file__)) + \
         '/confs/clock1.json5'
     options = cl.get_config_options(conf_filename, task_name=None)
