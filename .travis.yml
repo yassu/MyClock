@@ -1,18 +1,11 @@
 language: python
-env:
-    - LD_LIBRARY_PATH=/usr/local/lib
 
 python:
   - 3.3
   - 3.4
   - 3.5
-os:
-  - linux
-before_install:
-    - sudo apt-get update
 install:
   - sudo apt-get install python-dev
-  - sudo apt-get install libportaudio-dev
 
   - pip install nose
   - pip install json5
