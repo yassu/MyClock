@@ -252,7 +252,7 @@ def get_option_parser():
         dest='title',
         help='set title string')
     parser.add_option(
-        '--out_log', '-o',
+        '--log', '-o',
         action='store_true',
         dest='out_log',
         help='out log to stdout')
