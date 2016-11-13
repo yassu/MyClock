@@ -245,3 +245,37 @@ def merge_options_message_test4():
     assert(cl.merge_options(
         input_opts, {'message': 'ConfMessage'}, {})['message'] ==
         'DefaultMessage')
+
+
+def merge_options_message_test5():
+    """ hideだけOptionがある場合のmessageのテスト """
+    assert(cl.merge_options(
+        get_input_opts(), {}, {'message': 'HideMessage'})['message'] ==
+        'HideMessage')
+
+
+def merge_options_message_test6():
+    """ hideとconfにOptionがある場合のmessageのテスト """
+    assert(cl.merge_options(
+        get_input_opts(),
+        {'message': 'ConfMessage'}, {'message': 'HideMessage'})['message'] ==
+            'ConfMessage')
+
+
+def merge_options_message_test7():
+    """ hideとdefaultにOptionがある場合のmessageのテスト """
+    input_opts = get_input_opts()
+    input_opts['message'] = 'DefaultMessage'
+    assert(cl.merge_options(
+        input_opts, {}, {'message': 'HideMessage'})['message'] ==
+        'DefaultMessage')
+
+
+def merge_options_message_test8():
+    """ hideとdefaultとconfにOptionがある場合のmessageのテスト """
+    input_opts = get_input_opts()
+    input_opts['message'] = 'DefaultMessage'
+    assert(cl.merge_options(
+        input_opts,
+        {'message': 'ConfMessage'}, {'message': 'HideMessage'})['message'] ==
+            'DefaultMessage')
