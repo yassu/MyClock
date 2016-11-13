@@ -160,14 +160,14 @@ def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
 
 def get_task_names(conf_filename=DEFAULT_CONFIG_JFILENAME):
     # if options is set(), return DEFAULT_TASK_NAME
-    options = list(get_config_options(conf_filename=conf_filename,
-                                      task_name=None))
-    if DEFAULT_TASK_NAME not in options:
-        options.insert(0, DEFAULT_TASK_NAME)
-    if options == []:
+    option_names = sorted(list(get_config_options(conf_filename=conf_filename,
+                                           task_name=None)))
+    if DEFAULT_TASK_NAME not in option_names:
+        option_names.insert(0, DEFAULT_TASK_NAME)
+    if option_names == []:
         return [DEFAULT_TASK_NAME]
     else:
-        return options
+        return option_names
 
 
 class TimeSyntaxError(ValueError):
