@@ -78,6 +78,7 @@ def notify(options):
         get_terminal_escape(options['message'])), options)
 
 
+@bye_decorator
 def play_wav(confs):
     import pyaudio
     wf = wave.open(confs['wav_filename'], "r")
