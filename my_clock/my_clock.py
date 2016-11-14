@@ -288,12 +288,6 @@ def get_option_parser():
         dest='hide_popup',
         help="don't show popup"
     )
-    parser.add_option(
-        '--args-as-tasks',
-        action='store_true',
-        dest='args_as_tasks',
-        help="input task name from arg"
-    )
 
     # not conf opts
     parser.add_option(

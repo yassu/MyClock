@@ -50,6 +50,9 @@ Options
 - `-o`, `--log`: out log to stdout
 - `-r`, `--ring-bell`: ring bell or not after timer
 - `-b BELL_SOUND`, `--bell-sound BELL_SOUND`: mp3 file of bell_sound
+- `--bgm`, `--play-bgm`: play bgm
+- `--bgm-sound BGM_FILENAME`: bgm music
+- `--terminal_notify_options TERMINAL_NOTIFY_OPTIONS`: options of terminal notify
 - `hide-popup`: don't show popup
 - `-T TASK`, `--task=TASK`:  set task string default: "default"
 - `-f {filename}`, `--conf-file {filename}`: set configure filename string default: "~/.clock.json"
