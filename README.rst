@@ -1,7 +1,7 @@
 MyClock
 =========
 
-*version: 0.1.9*
+*version: 0.2.0*
 
 MyClock is a simple and "programmable" clock program.
 
@@ -38,7 +38,6 @@ Requirements
 --------------
 
 - `terminal-notifier <https://rubygems.org/gems/terminal-notifier/>`_
-- `afplay`
 
 Options
 ---------
@@ -48,9 +47,12 @@ Options
 - `-V`, `--verbose`: verbose
 - `-g MESSAGE`, `--message=MESSAGE`: set message string default: "MyClock"
 - `-t TITLE`, `--title=TITLE`: set title string. default: "MyClock"
-- `-o`, `--out_log`: out log to stdout
+- `-o`, `--log`: out log to stdout
 - `-r`, `--ring-bell`: ring bell or not after timer
 - `-b BELL_SOUND`, `--bell-sound BELL_SOUND`: mp3 file of bell_sound
+- `--bgm`, `--play-bgm`: play bgm
+- `--bgm-sound BGM_FILENAME`: bgm music
+- `--terminal_notify_options TERMINAL_NOTIFY_OPTIONS`: options of terminal notify
 - `hide-popup`: don't show popup
 - `-T TASK`, `--task=TASK`:  set task string default: "default"
 - `-f {filename}`, `--conf-file {filename}`: set configure filename string default: "~/.clock.json"

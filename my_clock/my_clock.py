@@ -11,7 +11,7 @@ import os.path
 import time
 import wave
 
-__VERSION__ = "0.1.9"
+__VERSION__ = "0.2.0"
 
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
@@ -27,6 +27,19 @@ def run_cmd(cmd, options):
     if options['verbose']:
         print('Run command: {}'.format(cmd))
     system(cmd)
+
+
+def bye_decorator(func):
+    import functools
+
+    @functools.wraps(func)
+    def wrapper(*args, **kargs):
+        try:
+            func(*args, **kargs)
+        except KeyboardInterrupt:
+            print('bye')
+            sys.exit()
+    return wrapper
 
 
 def executable_terminal_notifier():
@@ -66,6 +79,7 @@ def notify(options):
         get_terminal_escape(options['message'])), options)
 
 
+@bye_decorator
 def play_wav(confs):
     import pyaudio
     wf = wave.open(confs['wav_filename'], "r")
@@ -94,6 +108,7 @@ class NotDefinedTaskError(ValueError):
     """ Illegal Json5 syntax """
 
 
+@bye_decorator
 def spend_time(_time, out_log=None):
     if not out_log:
         time.sleep(_time)
@@ -145,14 +160,14 @@ def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
 
 def get_task_names(conf_filename=DEFAULT_CONFIG_JFILENAME):
     # if options is set(), return DEFAULT_TASK_NAME
-    options = list(get_config_options(conf_filename=conf_filename,
-                                      task_name=None))
-    if DEFAULT_TASK_NAME not in options:
-        options.insert(0, DEFAULT_TASK_NAME)
-    if options == []:
+    option_names = sorted(list(get_config_options(conf_filename=conf_filename,
+                                                  task_name=None)))
+    if DEFAULT_TASK_NAME not in option_names:
+        option_names.insert(0, DEFAULT_TASK_NAME)
+    if option_names == []:
         return [DEFAULT_TASK_NAME]
     else:
-        return options
+        return option_names
 
 
 class TimeSyntaxError(ValueError):
@@ -185,32 +200,34 @@ def get_time(times, conf_times):
         return _time
 
 
-def merge_options(input_opts, conf_opts):
+def merge_options(input_opts, conf_opts, hide_opts):
     return {
-        'verbose': get_option_value('verbose', False, input_opts, conf_opts),
-        'message': get_option_value('message', DEFAULT_MESSAGE, input_opts,
-                                    conf_opts),
-        'title': get_option_value('title', DEFAULT_TITLE, input_opts,
-                                  conf_opts),
-        'ring_bell': get_option_value('ring_bell', False, input_opts,
-                                      conf_opts),
-        'out_log': get_option_value('out_log', False, input_opts, conf_opts),
+        'verbose': get_option_value('verbose', False,
+                                    input_opts, conf_opts, hide_opts),
+        'message': get_option_value('message', DEFAULT_MESSAGE,
+                                    input_opts, conf_opts, hide_opts),
+        'title': get_option_value('title', DEFAULT_TITLE,
+                                  input_opts, conf_opts, hide_opts),
+        'ring_bell': get_option_value('ring_bell', False,
+                                      input_opts, conf_opts, hide_opts),
+        'out_log': get_option_value('out_log', False,
+                                    input_opts, conf_opts, hide_opts),
         'bell_sound': get_option_value(
             'bell_sound',
-            DEFAULT_BELL_SOUND_FILENAME, input_opts,
-            conf_opts),
+            DEFAULT_BELL_SOUND_FILENAME,
+            input_opts, conf_opts, hide_opts),
         'play_bgm': get_option_value(
             'play_bgm', False,
-            input_opts, conf_opts),
+            input_opts, conf_opts, hide_opts),
         'bgm_filename': get_option_value(
             'bgm_filename', DEFAULT_BGM_SOUND,
-            input_opts, conf_opts),
+            input_opts, conf_opts, hide_opts),
         'terminal_notify_options': get_option_value(
             'terminal_notify_options',
-            '', input_opts, conf_opts),
+            '', input_opts, conf_opts, hide_opts),
         'hide_popup': get_option_value('hide_popup', False, input_opts,
-                                       conf_opts),
-        'time': get_option_value('time', [], input_opts, conf_opts)
+                                       conf_opts, hide_opts),
+        'time': get_option_value('time', [], input_opts, conf_opts, hide_opts)
     }
 
 
@@ -235,7 +252,7 @@ def get_option_parser():
         dest='title',
         help='set title string')
     parser.add_option(
-        '--out_log', '-o',
+        '--log', '-o',
         action='store_true',
         dest='out_log',
         help='out log to stdout')
@@ -270,12 +287,6 @@ def get_option_parser():
         action='store_true',
         dest='hide_popup',
         help="don't show popup"
-    )
-    parser.add_option(
-        '--args-as-tasks',
-        action='store_true',
-        dest='args_as_tasks',
-        help="input task name from arg"
     )
 
     # not conf opts
@@ -314,6 +325,11 @@ def main():
     try:
         options = get_config_options(
             conf_filename=conf_filename, task_name=opts.task)
+        if "_" in get_task_names(conf_filename=conf_filename):
+            hide_options = get_config_options(
+                conf_filename=conf_filename, task_name='_')
+        else:
+            hide_options = {}
     except IllegalJson5Error as ex:
         sys.stderr.write(ex.args[0] + '\n')
         sys.exit()
@@ -331,7 +347,7 @@ def main():
         'out_log': opts.out_log,
         'time': args if len(args) > 0 else None
     },
-        options)
+        options, hide_options)
 
     if opts.show_tasks:
         for name in get_task_names(conf_filename):

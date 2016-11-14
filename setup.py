@@ -9,8 +9,7 @@ classifiers = [
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: 3.4',
-    'Topic :: Utilities',
-    'Environment :: MacOS X'
+    'Topic :: Utilities'
 ]
 
 setup(
@@ -21,6 +20,7 @@ setup(
     author='Yassu',
     author_email='mathyassu@gmail.com',
     url='https://github.com/yassu/MyClock',
+    license='MIT',
     packages=['my_clock'],
     install_requires=['json5'],
     classifiers=classifiers,
