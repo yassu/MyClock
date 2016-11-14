@@ -18,7 +18,8 @@ Usage
 
 where `[times]` is a list of syntax of `{num}s`, `{num}m`, `{num}h` or `{num}`.
 
-MyClock program spends 60 * 60 * `h` + 60 * `m` + `s` times and notice by popup.
+MyClock program spends 60 * 60 * `h` + 60 * `m` + `s` times and notice by popup
+  or music.
 
 How to install
 ----------------

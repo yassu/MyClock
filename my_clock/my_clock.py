@@ -6,6 +6,7 @@ import sys
 import threading
 import json5
 import subprocess
+from tqdm import tqdm
 from os import system
 import os.path
 import time
@@ -114,9 +115,8 @@ def spend_time(_time, out_log=None):
         time.sleep(_time)
         return
 
-    for j in range(1, _time + 1):
+    for j in tqdm(range(1, _time + 1)):
         time.sleep(1)
-        print(j)
 
 
 def get_option_value(opt_name, default_value,
