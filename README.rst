@@ -38,7 +38,6 @@ Requirements
 --------------
 
 - `terminal-notifier <https://rubygems.org/gems/terminal-notifier/>`_
-- `afplay`
 
 Options
 ---------
