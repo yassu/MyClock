@@ -37,6 +37,7 @@ def check_file(filename):
         sys.stderr.write('{} is not a file.\n'.format(filename))
         sys.exit()
 
+
 def bye_decorator(func):
     import functools
 
@@ -338,11 +339,10 @@ def main():
         'out_log': opts.out_log,
         'time': args if len(args) > 0 else None
     }
-    conf_filename = opts.conf_filename
 
     check_file(opts.conf_filename)
-    conf_filename = DEFAULT_CONFIG_JFILENAME if opts.conf_filename is None else(
-                        opts.conf_filename)
+    conf_filename = DEFAULT_CONFIG_JFILENAME if opts.conf_filename is None\
+        else(opts.conf_filename)
 
     try:
         options = get_config_options(
