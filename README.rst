@@ -184,20 +184,32 @@ You can define `time` option by using configure file.
 Each values of this option is working like as stdin.
 
 
-All Configures
-----------------
+Hide Option
+-------------
 
-`verbose`
-`message`
-`title`
-`ring_bell`
-`out_log`
-`bell_sound`
-`play_bgm`
-`bgm_filename`
-`terminal_notify_options`
-`hide_popup`
-`time`
+You can define hide option which like as `_` task. For example,
+
+When this program spent time, hide options is loaded.
+
+Of course, you can "overwrite" usual configure options or stdin.
+For example,
+
+```
+{
+  "_": {
+    "verbose": true,
+    "out_log": true,
+    "title": "Hide Title",
+    "message": "Hide Message"
+  },
+  "sample": {
+  "title": "sample title",
+  "message": "sample message",
+  "time": ["2s"]
+  }
+}
+```
+
 
 
 LICENSE
