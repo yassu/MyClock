@@ -30,6 +30,13 @@ def run_cmd(cmd, options):
     system(cmd)
 
 
+def check_file(filename):
+    if filename is None or os.path.isfile(filename):
+        return True
+    else:
+        sys.stderr.write('{} is not a file.\n'.format(filename))
+        sys.exit()
+
 def bye_decorator(func):
     import functools
 
@@ -333,9 +340,7 @@ def main():
     }
     conf_filename = opts.conf_filename
 
-    if opts.conf_filename is not None and not os.path.isfile(opts.conf_filename):
-        sys.stderr.write('{} is not a file.\n'.format(opts.conf_filename))
-        sys.exit()
+    check_file(opts.conf_filename)
     conf_filename = DEFAULT_CONFIG_JFILENAME if opts.conf_filename is None else(
                         opts.conf_filename)
 
@@ -351,6 +356,9 @@ def main():
         sys.stderr.write(ex.args[0] + '\n')
         sys.exit()
     options = merge_options(input_options, options, hide_options)
+
+    check_file(options['bell_sound'])
+    check_file(options['bgm_filename'])
 
     if opts.show_tasks:
         for name in get_task_names(conf_filename):
