@@ -316,6 +316,20 @@ def get_option_parser():
 
 def main():
     opts, args = get_option_parser().parse_args()
+    input_options = {
+        'message': opts.message,
+        'title': opts.title,
+        'verbose': opts.verbose,
+        'show_tasks': opts.show_tasks,
+        'ring_bell': opts.ring_bell,
+        'bell_sound': opts.bell_sound,
+        'play_bgm': opts.play_bgm,
+        'bgm_filename': opts.bgm_filename,
+        'terminal_notify_options': opts.terminal_notify_options,
+        'hide_popup': opts.hide_popup,
+        'out_log': opts.out_log,
+        'time': args if len(args) > 0 else None
+    }
     conf_filename = opts.conf_filename
 
     if not os.path.isfile(conf_filename):
@@ -333,21 +347,7 @@ def main():
     except IllegalJson5Error as ex:
         sys.stderr.write(ex.args[0] + '\n')
         sys.exit()
-    options = merge_options({
-        'message': opts.message,
-        'title': opts.title,
-        'verbose': opts.verbose,
-        'show_tasks': opts.show_tasks,
-        'ring_bell': opts.ring_bell,
-        'bell_sound': opts.bell_sound,
-        'play_bgm': opts.play_bgm,
-        'bgm_filename': opts.bgm_filename,
-        'terminal_notify_options': opts.terminal_notify_options,
-        'hide_popup': opts.hide_popup,
-        'out_log': opts.out_log,
-        'time': args if len(args) > 0 else None
-    },
-        options, hide_options)
+    options = merge_options(input_options, options, hide_options)
 
     if opts.show_tasks:
         for name in get_task_names(conf_filename):
