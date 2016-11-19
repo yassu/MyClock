@@ -301,7 +301,8 @@ def get_option_parser():
         '-f', '--conf-file',
         action='store',
         dest='conf_filename',
-        default=DEFAULT_CONFIG_JFILENAME,
+        # このoptionのdefault値は, このファイルが存在せず, optionsを指定しない
+        # 場合にエラーにならないようにするため後で定義する
         type=str,
         help='set configure filename string')
     parser.add_option(
@@ -332,9 +333,11 @@ def main():
     }
     conf_filename = opts.conf_filename
 
-    if not os.path.isfile(conf_filename):
-        sys.stderr.write('{} is not a file.\n'.format(conf_filename))
+    if opts.conf_filename is not None and not os.path.isfile(opts.conf_filename):
+        sys.stderr.write('{} is not a file.\n'.format(opts.conf_filename))
         sys.exit()
+    conf_filename = DEFAULT_CONFIG_JFILENAME if opts.conf_filename is None else(
+                        opts.conf_filename)
 
     try:
         options = get_config_options(
