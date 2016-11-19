@@ -111,6 +111,77 @@ You can define `message` option by using configure file.
 
 This value is given for message value of `termina-notify`.
 
+Title Option
+----------------
+
+*type: str*
+*default: "MyClock"*
+
+You can define `title` option by using configure file.
+
+This value is given for title value of `termina-notify`.
+
+Ring_bell Option
+------------------
+
+*type: bool*
+*default: false*
+
+You can define `ring_bell` option by using configure file.
+If value of this option is `true`, when finishing to spend time, play sound.
+
+Bell_sound Option
+-------------------
+
+*type: str*
+*default: inner-program sound*
+
+Playing sound when this program is finished.
+
+Play_bgm Option
+-----------------
+
+*type: bool*
+*default: false*
+
+You can define `ring_bell` option by using configure file.
+If value of this option is `true`, while this program spend time, this play music.
+
+Bgm_filename Option
+---------------------
+
+*type: str*
+*default: inner-program sound*
+
+You can define `bgm_filename` option by using configure file.
+Playing sound when this program is speinding time.
+
+Out_log Option
+----------------
+
+*type: bool*
+*default: false*
+
+You can define `ring_bell` option by using configure file.
+When this option is `true`, show progress bar when this program spends time.
+
+Terminal_notify_options Option
+--------------------------------
+
+*type: str*
+*default: ""*
+
+You can define `terminal-notify-options` option by using configure file.
+This value is given for options of `terminal-notify`.
+
+Time Option
+-------------
+
+*type: [int, int{s}, int{m}, int{h}]*
+*default: []*
+
+You can define `time` option by using configure file.
+Each values of this option is working like as stdin.
 
 
 All Configures
@@ -127,20 +198,6 @@ All Configures
 `terminal_notify_options`
 `hide_popup`
 `time`
-
-
-About Hide Configure
-======================
-
-You can define hide configure, which is task named `_`.
-This task is read when you can use `my_clock`.
-This has most lowest priority than other ways which this program read configure.
-
-For example, when you write `~/.clock.json` as
-
-```
-
-```
 
 
 LICENSE
