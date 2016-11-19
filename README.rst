@@ -1,3 +1,4 @@
+=========
 MyClock
 =========
 
@@ -10,7 +11,7 @@ MyClock is a simple and "programmable" clock program.
    :alt: Build Status
 
 Usage
--------
+=======
 
 .. code::
 
@@ -22,7 +23,7 @@ MyClock program spends 60 * 60 * `h` + 60 * `m` + `s` times and notice by popup
   or music.
 
 How to install
-----------------
+================
 .. code::
 
     % pip install my_clock
@@ -36,12 +37,12 @@ or
 at root directory of this project.
 
 Requirements
---------------
+==============
 
 - `terminal-notifier <https://rubygems.org/gems/terminal-notifier/>`_
 
 Options
----------
+=========
 
 - `--version`: show program's version number and exit
 - `-h`, `--help`: show this help message and exit
@@ -60,7 +61,7 @@ Options
 - `-l`, `--list`: show task names
 
 About Configure File
-----------------------
+======================
 
 You can define configure in configure file for `json5 <http://json5.org/>`_
 format.
@@ -90,7 +91,57 @@ For example,
     }
   }
 
+Verbose option
+----------------
+
+*type: bool*
+*default: false*
+
+You can define `verbose` option by using configure file.
+
+If value of this options is `true`, this program show all options, running commands and begin / finished task name.
+
+Message Option
+----------------
+
+*type: str*
+*default: "MyClock"*
+
+You can define `message` option by using configure file.
+
+
+
+All Configures
+----------------
+
+`verbose`
+`message`
+`title`
+`ring_bell`
+`out_log`
+`bell_sound`
+`play_bgm`
+`bgm_filename`
+`terminal_notify_options`
+`hide_popup`
+`time`
+
+
+About Hide Configure
+======================
+
+You can define hide configure, which is task named `_`.
+This task is read when you can use `my_clock`.
+This has most lowest priority than other ways which this program read configure.
+
+For example, when you write `~/.clock.json` as
+
+```
+
+```
+
+
 LICENSE
----------
+=========
 
 MIT
