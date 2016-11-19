@@ -8,6 +8,7 @@ install:
   - sudo apt-get install python-dev
 
   - pip install nose
+  - pip install tqdm
   - pip install json5
   - pip install flake8
 
