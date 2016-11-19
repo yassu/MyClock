@@ -6,12 +6,13 @@ import sys
 import threading
 import json5
 import subprocess
+from tqdm import tqdm
 from os import system
 import os.path
 import time
 import wave
 
-__VERSION__ = "0.2.0"
+__VERSION__ = "0.2.1"
 
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
@@ -28,6 +29,13 @@ def run_cmd(cmd, options):
         print('Run command: {}'.format(cmd))
     system(cmd)
 
+
+def check_file(filename):
+    if filename is None or os.path.isfile(filename):
+        return True
+    else:
+        sys.stderr.write('{} is not a file.\n'.format(filename))
+        sys.exit()
 
 def bye_decorator(func):
     import functools
@@ -114,9 +122,8 @@ def spend_time(_time, out_log=None):
         time.sleep(_time)
         return
 
-    for j in range(1, _time + 1):
+    for j in tqdm(range(1, _time + 1)):
         time.sleep(1)
-        print(j)
 
 
 def get_option_value(opt_name, default_value,
@@ -301,7 +308,8 @@ def get_option_parser():
         '-f', '--conf-file',
         action='store',
         dest='conf_filename',
-        default=DEFAULT_CONFIG_JFILENAME,
+        # このoptionのdefault値は, このファイルが存在せず, optionsを指定しない
+        # 場合にエラーにならないようにするため後で定義する
         type=str,
         help='set configure filename string')
     parser.add_option(
@@ -316,24 +324,7 @@ def get_option_parser():
 
 def main():
     opts, args = get_option_parser().parse_args()
-    conf_filename = opts.conf_filename
-
-    if not os.path.isfile(conf_filename):
-        sys.stderr.write('{} is not a file.\n'.format(conf_filename))
-        sys.exit()
-
-    try:
-        options = get_config_options(
-            conf_filename=conf_filename, task_name=opts.task)
-        if "_" in get_task_names(conf_filename=conf_filename):
-            hide_options = get_config_options(
-                conf_filename=conf_filename, task_name='_')
-        else:
-            hide_options = {}
-    except IllegalJson5Error as ex:
-        sys.stderr.write(ex.args[0] + '\n')
-        sys.exit()
-    options = merge_options({
+    input_options = {
         'message': opts.message,
         'title': opts.title,
         'verbose': opts.verbose,
@@ -346,8 +337,28 @@ def main():
         'hide_popup': opts.hide_popup,
         'out_log': opts.out_log,
         'time': args if len(args) > 0 else None
-    },
-        options, hide_options)
+    }
+    conf_filename = opts.conf_filename
+
+    check_file(opts.conf_filename)
+    conf_filename = DEFAULT_CONFIG_JFILENAME if opts.conf_filename is None else(
+                        opts.conf_filename)
+
+    try:
+        options = get_config_options(
+            conf_filename=conf_filename, task_name=opts.task)
+        if "_" in get_task_names(conf_filename=conf_filename):
+            hide_options = get_config_options(
+                conf_filename=conf_filename, task_name='_')
+        else:
+            hide_options = {}
+    except IllegalJson5Error as ex:
+        sys.stderr.write(ex.args[0] + '\n')
+        sys.exit()
+    options = merge_options(input_options, options, hide_options)
+
+    check_file(options['bell_sound'])
+    check_file(options['bgm_filename'])
 
     if opts.show_tasks:
         for name in get_task_names(conf_filename):
