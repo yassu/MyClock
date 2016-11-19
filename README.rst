@@ -109,6 +109,8 @@ Message Option
 
 You can define `message` option by using configure file.
 
+This value is given for message value of `termina-notify`.
+
 
 
 All Configures
