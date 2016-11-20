@@ -172,8 +172,17 @@ Terminal_notify_options Option
 *type: str*
 *default: ""*
 
-You can define `terminal-notify-options` option by using configure file.
+You can define `terminal_notify_options` option by using configure file.
 This value is given for options of `terminal-notify`.
+
+Force_to_use_task Option
+--------------------------
+
+*type: bool*
+*default: false*
+
+You can define `force_to_use_task` option by using configure file.
+If this value is True and task name is not defined, raise Error.
 
 Time Option
 -------------
