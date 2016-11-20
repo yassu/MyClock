@@ -62,10 +62,10 @@ class PlayThread(threading.Thread):
         now_time = start_time
 
         while now_time <= start_time + self._confs['time']:
-            play_wav({
+            PlayWav({
                 'verbose': False,
                 'wav_filename': self._confs['wav_filename'],
-                'time': self._confs['time'] - (now_time - start_time)})
+                'time': self._confs['time'] - (now_time - start_time)}).play()
             now_time = time.time()
 
 
@@ -76,24 +76,28 @@ def notify(options):
         get_terminal_escape(options['message'])), options)
 
 
-def play_wav(confs):
-    import pyaudio
-    wf = wave.open(confs['wav_filename'], "r")
-    p = pyaudio.PyAudio()
-    stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                    channels=wf.getnchannels(),
-                    rate=wf.getframerate(),
-                    output=True)
+class PlayWav:
+    def __init__(self, confs):
+        self._confs = confs
 
-    data = wf.readframes(1024)
-    start_time = time.time()
-    while(data != b''):
-        stream.write(data)
+    def play(self):
+        import pyaudio
+        wf = wave.open(self._confs['wav_filename'], "r")
+        p = pyaudio.PyAudio()
+        stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                        channels=wf.getnchannels(),
+                        rate=wf.getframerate(),
+                        output=True)
+
         data = wf.readframes(1024)
-        if 'time' in confs and time.time() - start_time >= confs['time']:
-            return
-    stream.close()
-    p.terminate()
+        start_time = time.time()
+        while(data != b''):
+            stream.write(data)
+            data = wf.readframes(1024)
+            if 'time' in self._confs and time.time() - start_time >= self._confs['time']:
+                return
+        stream.close()
+        p.terminate()
 
 
 class IllegalJson5Error(ValueError):
@@ -424,7 +428,7 @@ def main():
             print('finished {} time'.format(opts.task))
 
         if options['ring_bell']:
-            play_wav({'wav_filename': DEFAULT_BELL_SOUND_FILENAME})
+            PlayWav({'wav_filename': DEFAULT_BELL_SOUND_FILENAME}).play()
     except KeyboardInterrupt:
         print('bye')
         sys.exit()
