@@ -56,16 +56,20 @@ class PlayThread(threading.Thread):
     def __init__(self, confs):
         super(PlayThread, self).__init__()
         self._confs = confs
+        self.play_wav = None
+
+    def kill(self):
+        self.play_wav.kill()
 
     def run(self):
         start_time = time.time()
         now_time = start_time
-
-        while now_time <= start_time + self._confs['time']:
-            play_wav({
-                'verbose': False,
+        self.play_wav = PlayWav({'verbose': False,
                 'wav_filename': self._confs['wav_filename'],
                 'time': self._confs['time'] - (now_time - start_time)})
+
+        while now_time <= start_time + self._confs['time'] and self.play_wav._killed is False:
+            self.play_wav.play()
             now_time = time.time()
 
 
@@ -76,24 +80,39 @@ def notify(options):
         get_terminal_escape(options['message'])), options)
 
 
-def play_wav(confs):
-    import pyaudio
-    wf = wave.open(confs['wav_filename'], "r")
-    p = pyaudio.PyAudio()
-    stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                    channels=wf.getnchannels(),
-                    rate=wf.getframerate(),
-                    output=True)
+class PlayWav:
+    def __init__(self, confs):
+        self._confs = confs
+        self._killed = False
 
-    data = wf.readframes(1024)
-    start_time = time.time()
-    while(data != b''):
-        stream.write(data)
+    @property
+    def killed(self):
+        return self._killed
+
+    def kill(self):
+        self._killed = True
+
+    def play(self):
+        import pyaudio
+        wf = wave.open(self._confs['wav_filename'], "r")
+        p = pyaudio.PyAudio()
+        stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                        channels=wf.getnchannels(),
+                        rate=wf.getframerate(),
+                        output=True)
+
         data = wf.readframes(1024)
-        if 'time' in confs and time.time() - start_time >= confs['time']:
-            return
-    stream.close()
-    p.terminate()
+        start_time = time.time()
+        is_end = False
+        while(data != b''):
+            stream.write(data)
+            data = wf.readframes(1024)
+            if 'time' in self._confs and time.time() - start_time >= self._confs['time']:
+                break
+            if self._killed:
+                break
+        stream.close()
+        p.terminate()
 
 
 class IllegalJson5Error(ValueError):
@@ -424,9 +443,10 @@ def main():
             print('finished {} time'.format(opts.task))
 
         if options['ring_bell']:
-            play_wav({'wav_filename': DEFAULT_BELL_SOUND_FILENAME})
+            PlayWav({'wav_filename': DEFAULT_BELL_SOUND_FILENAME}).play()
     except KeyboardInterrupt:
         print('bye')
+        th.kill()
         sys.exit()
 
 
