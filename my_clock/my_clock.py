@@ -39,19 +39,6 @@ def check_file(filename):
         sys.exit()
 
 
-def bye_decorator(func):
-    import functools
-
-    @functools.wraps(func)
-    def wrapper(*args, **kargs):
-        try:
-            func(*args, **kargs)
-        except KeyboardInterrupt:
-            print('bye')
-            sys.exit()
-    return wrapper
-
-
 def executable_terminal_notifier():
     try:
         subprocess.check_output(['terminal-notifier', '-help'])
@@ -89,7 +76,6 @@ def notify(options):
         get_terminal_escape(options['message'])), options)
 
 
-@bye_decorator
 def play_wav(confs):
     import pyaudio
     wf = wave.open(confs['wav_filename'], "r")
@@ -118,7 +104,6 @@ class NotDefinedTaskError(ValueError):
     """ Illegal Json5 syntax """
 
 
-@bye_decorator
 def spend_time(_time, out_log=None):
     if not out_log:
         time.sleep(_time)
@@ -421,24 +406,28 @@ def main():
     if options['hide_popup'] and not options['ring_bell']:
         sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
         sys.exit()
-    if options['play_bgm']:
-        th = PlayThread({'wav_filename': options['bgm_filename'],
-                         'time': sleep_time})
-        th.start()
     if options["verbose"]:
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
         print('begin {} time'.format(opts.task))
-    spend_time(sleep_time, out_log=options['out_log'])
+    try:
+        if options['play_bgm']:
+            th = PlayThread({'wav_filename': options['bgm_filename'],
+                             'time': sleep_time})
+            th.start()
+        spend_time(sleep_time, out_log=options['out_log'])
 
-    if not options['hide_popup']:
-        notify(options)
+        if not options['hide_popup']:
+            notify(options)
 
-    if options["verbose"]:
-        print('finished {} time'.format(opts.task))
+        if options["verbose"]:
+            print('finished {} time'.format(opts.task))
 
-    if options['ring_bell']:
-        play_wav({'wav_filename': DEFAULT_BELL_SOUND_FILENAME})
+        if options['ring_bell']:
+            play_wav({'wav_filename': DEFAULT_BELL_SOUND_FILENAME})
+    except KeyboardInterrupt:
+        print('bye')
+        sys.exit()
 
 
 if __name__ == '__main__':
