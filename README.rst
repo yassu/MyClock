@@ -57,6 +57,7 @@ Options
 - `--terminal_notify_options TERMINAL_NOTIFY_OPTIONS`: options of terminal notify
 - `--hide-popup`: don't show popup
 -  `--force-to-use-task`: force to use task
+-  `-s, --show`: show options and exit
 - `-T TASK`, `--task=TASK`:  set task string default: "default"
 - `-f {filename}`, `--conf-file {filename}`: set configure filename string default: "~/.clock.json"
 - `-l`, `--list`: show task names
