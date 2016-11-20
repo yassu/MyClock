@@ -307,6 +307,12 @@ def get_option_parser():
 
     # not conf opts
     parser.add_option(
+        '-s', '--show',
+        action='store_true',
+        dest='show',
+        default=False,
+        help='show options and exit')
+    parser.add_option(
         '-T', '--task',
         action='store',
         dest='task',
@@ -332,6 +338,7 @@ def get_option_parser():
 
 def main():
     opts, args = get_option_parser().parse_args()
+
     input_options = {
         'message': opts.message,
         'title': opts.title,
@@ -364,6 +371,12 @@ def main():
         sys.stderr.write(ex.args[0] + '\n')
         sys.exit()
     options = merge_options(input_options, options, hide_options)
+
+    if opts.show:
+        print('Options:')
+        for key, value in options.items():
+            print('{} {}: {}'.format(' '*4, key, value))
+        sys.exit()
 
     check_file(options['bell_sound'])
     check_file(options['bgm_filename'])
