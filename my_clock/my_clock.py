@@ -388,6 +388,11 @@ def main():
             print('{} {}: {}'.format(INDENTATION, key, value))
         sys.exit()
 
+    if opts.show_tasks:
+        for name in get_task_names(conf_filename):
+            print(name)
+        sys.exit()
+
     check_file(options['bell_sound'])
     check_file(options['bgm_filename'])
 
@@ -397,11 +402,6 @@ def main():
         sys.exit()
     if opts.task is None:
         opts.task = DEFAULT_TASK_NAME
-
-    if opts.show_tasks:
-        for name in get_task_names(conf_filename):
-            print(name)
-        sys.exit()
 
     try:
         if 'time' not in options:
