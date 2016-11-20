@@ -15,11 +15,11 @@ def get_input_opts():
         'play_bgm': None,
         'bgm_filename': None,
         'out_log': None,
+        'force_to_use_task': None,
         'time': [],
         'hide_popup': None,
         'bell_sound': None,
         'terminal_notify_options': None,
-        'afplay_options': None
     }
 
 
