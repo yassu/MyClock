@@ -139,11 +139,13 @@ def get_option_value(opt_name, default_value,
     else:
         return default_value
 
+
 def replace_for_config(d):
     d_tmp = dict()
     for key, val in d.items():
         d_tmp[key.replace('-', '_')] = val
     return d_tmp
+
 
 def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
                        task_name=DEFAULT_TASK_NAME):
@@ -241,8 +243,10 @@ def merge_options(input_opts, conf_opts, hide_opts):
             '', input_opts, conf_opts, hide_opts),
         'hide_popup': get_option_value('hide_popup', False, input_opts,
                                        conf_opts, hide_opts),
-        'force_to_use_task': get_option_value('force_to_use_task', False,
-                                input_opts, conf_opts, hide_opts),
+        'force_to_use_task': get_option_value('force_to_use_task',
+                                              False,
+                                              input_opts,
+                                              conf_opts, hide_opts),
         'time': get_option_value('time', [], input_opts, conf_opts, hide_opts)
     }
 
@@ -388,7 +392,8 @@ def main():
     check_file(options['bgm_filename'])
 
     if options['force_to_use_task'] and opts.task is None:
-        sys.stderr.write('Force to use option is True and task name is not defined.\n')
+        sys.stderr.write(
+            'Force to use option is True and task name is not defined.\n')
         sys.exit()
     if opts.task is None:
         opts.task = DEFAULT_TASK_NAME
