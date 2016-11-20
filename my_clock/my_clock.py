@@ -139,6 +139,11 @@ def get_option_value(opt_name, default_value,
     else:
         return default_value
 
+def replace_for_config(d):
+    d_tmp = dict()
+    for key, val in d.items():
+        d_tmp[key.replace('-', '_')] = val
+    return d_tmp
 
 def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
                        task_name=DEFAULT_TASK_NAME):
@@ -160,7 +165,7 @@ def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
                         get_task_names(conf_filename=conf_filename):
                     raise NotDefinedTaskError('{} task is not defined.'.format(
                         task_name))
-                return json5.load(jf).get(task_name, {})
+                return replace_for_config(json5.load(jf).get(task_name, {}))
             except Exception as ex:
                 raise IllegalJson5Error(
                     '{} occurs following json5 syntax error:\n'
