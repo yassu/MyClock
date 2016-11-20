@@ -56,16 +56,20 @@ class PlayThread(threading.Thread):
     def __init__(self, confs):
         super(PlayThread, self).__init__()
         self._confs = confs
+        self.play_wav = None
+
+    def kill(self):
+        self.play_wav.kill()
 
     def run(self):
         start_time = time.time()
         now_time = start_time
-
-        while now_time <= start_time + self._confs['time']:
-            PlayWav({
-                'verbose': False,
+        self.play_wav = PlayWav({'verbose': False,
                 'wav_filename': self._confs['wav_filename'],
-                'time': self._confs['time'] - (now_time - start_time)}).play()
+                'time': self._confs['time'] - (now_time - start_time)})
+
+        while now_time <= start_time + self._confs['time'] and self.play_wav._killed is False:
+            self.play_wav.play()
             now_time = time.time()
 
 
@@ -79,6 +83,14 @@ def notify(options):
 class PlayWav:
     def __init__(self, confs):
         self._confs = confs
+        self._killed = False
+
+    @property
+    def killed(self):
+        return self._killed
+
+    def kill(self):
+        self._killed = True
 
     def play(self):
         import pyaudio
@@ -91,11 +103,14 @@ class PlayWav:
 
         data = wf.readframes(1024)
         start_time = time.time()
+        is_end = False
         while(data != b''):
             stream.write(data)
             data = wf.readframes(1024)
             if 'time' in self._confs and time.time() - start_time >= self._confs['time']:
-                return
+                break
+            if self._killed:
+                break
         stream.close()
         p.terminate()
 
@@ -431,6 +446,7 @@ def main():
             PlayWav({'wav_filename': DEFAULT_BELL_SOUND_FILENAME}).play()
     except KeyboardInterrupt:
         print('bye')
+        th.kill()
         sys.exit()
 
 
