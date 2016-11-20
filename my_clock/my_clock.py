@@ -64,11 +64,13 @@ class PlayThread(threading.Thread):
     def run(self):
         start_time = time.time()
         now_time = start_time
-        self.play_wav = PlayWav({'verbose': False,
-                'wav_filename': self._confs['wav_filename'],
-                'time': self._confs['time'] - (now_time - start_time)})
+        self.play_wav = PlayWav(
+            {'verbose': False,
+             'wav_filename': self._confs['wav_filename'],
+             'time': self._confs['time'] - (now_time - start_time)})
 
-        while now_time <= start_time + self._confs['time'] and self.play_wav._killed is False:
+        while now_time <= start_time + self._confs['time'] and\
+                self.play_wav._killed is False:
             self.play_wav.play()
             now_time = time.time()
 
@@ -81,6 +83,7 @@ def notify(options):
 
 
 class PlayWav:
+
     def __init__(self, confs):
         self._confs = confs
         self._killed = False
@@ -103,11 +106,11 @@ class PlayWav:
 
         data = wf.readframes(1024)
         start_time = time.time()
-        is_end = False
         while(data != b''):
             stream.write(data)
             data = wf.readframes(1024)
-            if 'time' in self._confs and time.time() - start_time >= self._confs['time']:
+            if 'time' in self._confs and \
+                    time.time() - start_time >= self._confs['time']:
                 break
             if self._killed:
                 break
