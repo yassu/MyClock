@@ -235,6 +235,8 @@ def merge_options(input_opts, conf_opts, hide_opts):
             '', input_opts, conf_opts, hide_opts),
         'hide_popup': get_option_value('hide_popup', False, input_opts,
                                        conf_opts, hide_opts),
+        'force_to_use_task': get_option_value('force_to_use_task', False,
+                                input_opts, conf_opts, hide_opts),
         'time': get_option_value('time', [], input_opts, conf_opts, hide_opts)
     }
 
@@ -296,13 +298,18 @@ def get_option_parser():
         dest='hide_popup',
         help="don't show popup"
     )
+    parser.add_option(
+        '--force-to-use-task',
+        action='store_true',
+        dest='force_to_use_task',
+        help="force to use task"
+    )
 
     # not conf opts
     parser.add_option(
         '-T', '--task',
         action='store',
         dest='task',
-        default=DEFAULT_TASK_NAME,
         type=str,
         help='set task string')
     parser.add_option(
@@ -337,6 +344,7 @@ def main():
         'terminal_notify_options': opts.terminal_notify_options,
         'hide_popup': opts.hide_popup,
         'out_log': opts.out_log,
+        'force_to_use_task': opts.force_to_use_task,
         'time': args if len(args) > 0 else None
     }
 
@@ -359,6 +367,12 @@ def main():
 
     check_file(options['bell_sound'])
     check_file(options['bgm_filename'])
+
+    if options['force_to_use_task'] and opts.task is None:
+        sys.stderr.write('Force to use option is True and task name is not defined.\n')
+        sys.exit()
+    if opts.task is None:
+        opts.task = DEFAULT_TASK_NAME
 
     if opts.show_tasks:
         for name in get_task_names(conf_filename):
