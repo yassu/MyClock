@@ -429,7 +429,7 @@ def main():
         sys.stderr.write('Please install terminal_notifier\n')
         sys.exit()
 
-    if options['bell_sound'] is None:
+    if options['play_bgm'] and options['bell_sound'] is None:
         sys.stderr.write('bell_sound is not defined.\n')
         sys.exit()
 
