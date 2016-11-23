@@ -400,8 +400,10 @@ def main():
             print(name)
         sys.exit()
 
-    check_file(options['bell_sound'])
-    check_file(options['bgm_filename'])
+    if options['ring_bell']:
+        check_file(options['bell_sound'])
+    if options['play_bgm']:
+        check_file(options['bgm_filename'])
 
     if options['force_to_use_task'] and opts.task is None:
         sys.stderr.write(
