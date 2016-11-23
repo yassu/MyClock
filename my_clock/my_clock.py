@@ -237,7 +237,7 @@ def merge_options(input_opts, conf_opts, hide_opts):
                                     input_opts, conf_opts, hide_opts),
         'bell_sound': get_option_value(
             'bell_sound',
-            DEFAULT_BELL_SOUND_FILENAME,
+            None,
             input_opts, conf_opts, hide_opts),
         'play_bgm': get_option_value(
             'play_bgm', False,
@@ -427,6 +427,10 @@ def main():
         sys.stderr.write('Please install terminal_notifier\n')
         sys.exit()
 
+    if options['bell_sound'] is None:
+        sys.stderr.write('bell_sound is not defined.\n')
+        sys.exit()
+
     if options['hide_popup'] and not options['ring_bell']:
         sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
         sys.exit()
@@ -448,7 +452,7 @@ def main():
             print('finished {} time'.format(opts.task))
 
         if options['ring_bell']:
-            PlayWav({'wav_filename': DEFAULT_BELL_SOUND_FILENAME}).play()
+            PlayWav({'wav_filename': options['bell_sound']}).play()
     except KeyboardInterrupt:
         print('bye')
         if options['play_bgm']:
