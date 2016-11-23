@@ -2,7 +2,7 @@
 MyClock
 =========
 
-*version: 0.2.1*
+*version: 0.2.2*
 
 MyClock is a simple and "programmable" clock program.
 
@@ -55,7 +55,9 @@ Options
 - `--bgm`, `--play-bgm`: play bgm
 - `--bgm-sound BGM_FILENAME`: bgm music
 - `--terminal_notify_options TERMINAL_NOTIFY_OPTIONS`: options of terminal notify
-- `hide-popup`: don't show popup
+- `--hide-popup`: don't show popup
+-  `--force-to-use-task`: force to use task
+-  `-s, --show`: show options and exit
 - `-T TASK`, `--task=TASK`:  set task string default: "default"
 - `-f {filename}`, `--conf-file {filename}`: set configure filename string default: "~/.clock.json"
 - `-l`, `--list`: show task names
@@ -94,6 +96,7 @@ For example,
 Verbose option
 ----------------
 
+*Corresponding option: -V, --verbose*
 *type: bool*
 *default: false*
 
@@ -104,6 +107,7 @@ If value of this options is `true`, this program show all options, running comma
 Message Option
 ----------------
 
+*Corresponding option: -g, --message*
 *type: str*
 *default: "MyClock"*
 
@@ -114,6 +118,7 @@ This value is given for message value of `termina-notify`.
 Title Option
 ----------------
 
+*Corresponding option: -t, --title*
 *type: str*
 *default: "MyClock"*
 
@@ -124,6 +129,7 @@ This value is given for title value of `termina-notify`.
 Ring_bell Option
 ------------------
 
+*Corresponding option: -r, --ring-bell*
 *type: bool*
 *default: false*
 
@@ -133,6 +139,7 @@ If value of this option is `true`, when finishing to spend time, play sound.
 Bell_sound Option
 -------------------
 
+*Corresponding option:---bgm-sound*
 *type: str*
 *default: inner-program sound*
 
@@ -141,6 +148,7 @@ Playing sound when this program is finished.
 Play_bgm Option
 -----------------
 
+*Corresponding option:--bgm, play-bgm*
 *type: bool*
 *default: false*
 
@@ -150,6 +158,7 @@ If value of this option is `true`, while this program spend time, this play musi
 Bgm_filename Option
 ---------------------
 
+*Corresponding option: bgm-sound*
 *type: str*
 *default: inner-program sound*
 
@@ -159,6 +168,7 @@ Playing sound when this program is speinding time.
 Out_log Option
 ----------------
 
+*Corresponding option: -o, --log*
 *type: bool*
 *default: false*
 
@@ -168,11 +178,22 @@ When this option is `true`, show progress bar when this program spends time.
 Terminal_notify_options Option
 --------------------------------
 
+*Corresponding option: --terminal_notify_options*
 *type: str*
 *default: ""*
 
-You can define `terminal-notify-options` option by using configure file.
+You can define `terminal_notify_options` option by using configure file.
 This value is given for options of `terminal-notify`.
+
+Force_to_use_task Option
+--------------------------
+
+*Corresponding option: --force-to-use-task*
+*type: bool*
+*default: false*
+
+You can define `force_to_use_task` option by using configure file.
+If this value is True and task name is not defined, raise Error.
 
 Time Option
 -------------
@@ -184,20 +205,32 @@ You can define `time` option by using configure file.
 Each values of this option is working like as stdin.
 
 
-All Configures
-----------------
+Hide Option
+-------------
 
-`verbose`
-`message`
-`title`
-`ring_bell`
-`out_log`
-`bell_sound`
-`play_bgm`
-`bgm_filename`
-`terminal_notify_options`
-`hide_popup`
-`time`
+You can define hide option which like as `_` task. For example,
+
+When this program spent time, hide options is loaded.
+
+Of course, you can "overwrite" usual configure options or stdin.
+For example,
+
+```
+{
+  "_": {
+    "verbose": true,
+    "out_log": true,
+    "title": "Hide Title",
+    "message": "Hide Message"
+  },
+  "sample": {
+  "title": "sample title",
+  "message": "sample message",
+  "time": ["2s"]
+  }
+}
+```
+
 
 
 LICENSE

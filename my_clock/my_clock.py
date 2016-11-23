@@ -12,16 +12,15 @@ import os.path
 import time
 import wave
 
-__VERSION__ = "0.2.1"
+__VERSION__ = "0.2.2"
 
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
 DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
 DEFAULT_TASK_NAME = 'default'
-DEFAULT_BELL_SOUND_FILENAME = os.path.abspath(
-    os.path.dirname(os.path.abspath(__file__)) + '/music/default_bell.wav')
 DEFAULT_BGM_SOUND = os.path.abspath(
     os.path.dirname(os.path.abspath(__file__)) + '/music/ticking.wav')
+INDENTATION = ' ' * 4
 
 
 def run_cmd(cmd, options):
@@ -38,22 +37,9 @@ def check_file(filename):
         sys.exit()
 
 
-def bye_decorator(func):
-    import functools
-
-    @functools.wraps(func)
-    def wrapper(*args, **kargs):
-        try:
-            func(*args, **kargs)
-        except KeyboardInterrupt:
-            print('bye')
-            sys.exit()
-    return wrapper
-
-
 def executable_terminal_notifier():
     try:
-        subprocess.check_output(['terminal-notifier', '-help'])
+        subprocess.check_output(['which', 'terminal-notifier'])
         return True
     except FileNotFoundError:
         return False
@@ -68,16 +54,22 @@ class PlayThread(threading.Thread):
     def __init__(self, confs):
         super(PlayThread, self).__init__()
         self._confs = confs
+        self.play_wav = None
+
+    def kill(self):
+        self.play_wav.kill()
 
     def run(self):
         start_time = time.time()
         now_time = start_time
+        self.play_wav = PlayWav(
+            {'verbose': False,
+             'wav_filename': self._confs['wav_filename'],
+             'time': self._confs['time'] - (now_time - start_time)})
 
-        while now_time <= start_time + self._confs['time']:
-            play_wav({
-                'verbose': False,
-                'wav_filename': self._confs['wav_filename'],
-                'time': self._confs['time'] - (now_time - start_time)})
+        while now_time <= start_time + self._confs['time'] and\
+                self.play_wav._killed is False:
+            self.play_wav.play()
             now_time = time.time()
 
 
@@ -88,25 +80,40 @@ def notify(options):
         get_terminal_escape(options['message'])), options)
 
 
-@bye_decorator
-def play_wav(confs):
-    import pyaudio
-    wf = wave.open(confs['wav_filename'], "r")
-    p = pyaudio.PyAudio()
-    stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                    channels=wf.getnchannels(),
-                    rate=wf.getframerate(),
-                    output=True)
+class PlayWav:
 
-    data = wf.readframes(1024)
-    start_time = time.time()
-    while(data != b''):
-        stream.write(data)
+    def __init__(self, confs):
+        self._confs = confs
+        self._killed = False
+
+    @property
+    def killed(self):
+        return self._killed
+
+    def kill(self):
+        self._killed = True
+
+    def play(self):
+        import pyaudio
+        wf = wave.open(self._confs['wav_filename'], "r")
+        p = pyaudio.PyAudio()
+        stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                        channels=wf.getnchannels(),
+                        rate=wf.getframerate(),
+                        output=True)
+
         data = wf.readframes(1024)
-        if 'time' in confs and time.time() - start_time >= confs['time']:
-            return
-    stream.close()
-    p.terminate()
+        start_time = time.time()
+        while(data != b''):
+            stream.write(data)
+            data = wf.readframes(1024)
+            if 'time' in self._confs and \
+                    time.time() - start_time >= self._confs['time']:
+                break
+            if self._killed:
+                break
+        stream.close()
+        p.terminate()
 
 
 class IllegalJson5Error(ValueError):
@@ -117,7 +124,6 @@ class NotDefinedTaskError(ValueError):
     """ Illegal Json5 syntax """
 
 
-@bye_decorator
 def spend_time(_time, out_log=None):
     if not out_log:
         time.sleep(_time)
@@ -137,6 +143,13 @@ def get_option_value(opt_name, default_value,
         return hide_opts[opt_name]
     else:
         return default_value
+
+
+def replace_for_config(d):
+    d_tmp = dict()
+    for key, val in d.items():
+        d_tmp[key.replace('-', '_')] = val
+    return d_tmp
 
 
 def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
@@ -159,7 +172,7 @@ def get_config_options(conf_filename=DEFAULT_CONFIG_JFILENAME,
                         get_task_names(conf_filename=conf_filename):
                     raise NotDefinedTaskError('{} task is not defined.'.format(
                         task_name))
-                return json5.load(jf).get(task_name, {})
+                return replace_for_config(json5.load(jf).get(task_name, {}))
             except Exception as ex:
                 raise IllegalJson5Error(
                     '{} occurs following json5 syntax error:\n'
@@ -222,19 +235,23 @@ def merge_options(input_opts, conf_opts, hide_opts):
                                     input_opts, conf_opts, hide_opts),
         'bell_sound': get_option_value(
             'bell_sound',
-            DEFAULT_BELL_SOUND_FILENAME,
+            None,
             input_opts, conf_opts, hide_opts),
         'play_bgm': get_option_value(
             'play_bgm', False,
             input_opts, conf_opts, hide_opts),
         'bgm_filename': get_option_value(
-            'bgm_filename', DEFAULT_BGM_SOUND,
+            'bgm_filename', None,
             input_opts, conf_opts, hide_opts),
         'terminal_notify_options': get_option_value(
             'terminal_notify_options',
             '', input_opts, conf_opts, hide_opts),
         'hide_popup': get_option_value('hide_popup', False, input_opts,
                                        conf_opts, hide_opts),
+        'force_to_use_task': get_option_value('force_to_use_task',
+                                              False,
+                                              input_opts,
+                                              conf_opts, hide_opts),
         'time': get_option_value('time', [], input_opts, conf_opts, hide_opts)
     }
 
@@ -296,13 +313,24 @@ def get_option_parser():
         dest='hide_popup',
         help="don't show popup"
     )
+    parser.add_option(
+        '--force-to-use-task',
+        action='store_true',
+        dest='force_to_use_task',
+        help="force to use task"
+    )
 
     # not conf opts
+    parser.add_option(
+        '-s', '--show',
+        action='store_true',
+        dest='show',
+        default=False,
+        help='show options and exit')
     parser.add_option(
         '-T', '--task',
         action='store',
         dest='task',
-        default=DEFAULT_TASK_NAME,
         type=str,
         help='set task string')
     parser.add_option(
@@ -325,6 +353,7 @@ def get_option_parser():
 
 def main():
     opts, args = get_option_parser().parse_args()
+
     input_options = {
         'message': opts.message,
         'title': opts.title,
@@ -337,6 +366,7 @@ def main():
         'terminal_notify_options': opts.terminal_notify_options,
         'hide_popup': opts.hide_popup,
         'out_log': opts.out_log,
+        'force_to_use_task': opts.force_to_use_task,
         'time': args if len(args) > 0 else None
     }
 
@@ -356,14 +386,33 @@ def main():
         sys.stderr.write(ex.args[0] + '\n')
         sys.exit()
     options = merge_options(input_options, options, hide_options)
+    if options['bgm_filename'] is not None:
+        options['bgm_filename'] = os.path.expanduser(options['bgm_filename'])
+    if options['bell_sound'] is not None:
+        options['bell_sound'] = os.path.expanduser(options['bell_sound'])
 
-    check_file(options['bell_sound'])
-    check_file(options['bgm_filename'])
+    if opts.show:
+        print('Options:')
+        for key, value in options.items():
+            print('{} {}: {}'.format(INDENTATION, key, value))
+        sys.exit()
 
     if opts.show_tasks:
         for name in get_task_names(conf_filename):
             print(name)
         sys.exit()
+
+    if options['ring_bell']:
+        check_file(options['bell_sound'])
+    if options['play_bgm']:
+        check_file(options['bgm_filename'])
+
+    if options['force_to_use_task'] and opts.task is None:
+        sys.stderr.write(
+            'Force to use option is True and task name is not defined.\n')
+        sys.exit()
+    if opts.task is None:
+        opts.task = DEFAULT_TASK_NAME
 
     try:
         if 'time' not in options:
@@ -380,27 +429,37 @@ def main():
         sys.stderr.write('Please install terminal_notifier\n')
         sys.exit()
 
+    if options['play_bgm'] and options['bell_sound'] is None:
+        sys.stderr.write('bell_sound is not defined.\n')
+        sys.exit()
+
     if options['hide_popup'] and not options['ring_bell']:
         sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
         sys.exit()
-    if options['play_bgm']:
-        th = PlayThread({'wav_filename': options['bgm_filename'],
-                         'time': sleep_time})
-        th.start()
     if options["verbose"]:
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
         print('begin {} time'.format(opts.task))
-    spend_time(sleep_time, out_log=options['out_log'])
+    try:
+        if options['play_bgm']:
+            th = PlayThread({'wav_filename': options['bgm_filename'],
+                             'time': sleep_time})
+            th.start()
+        spend_time(sleep_time, out_log=options['out_log'])
 
-    if not options['hide_popup']:
-        notify(options)
+        if not options['hide_popup']:
+            notify(options)
 
-    if options["verbose"]:
-        print('finished {} time'.format(opts.task))
+        if options["verbose"]:
+            print('finished {} time'.format(opts.task))
 
-    if options['ring_bell']:
-        play_wav({'wav_filename': DEFAULT_BELL_SOUND_FILENAME})
+        if options['ring_bell']:
+            PlayWav({'wav_filename': options['bell_sound']}).play()
+    except KeyboardInterrupt:
+        print('bye')
+        if options['play_bgm']:
+            th.kill()
+        sys.exit()
 
 
 if __name__ == '__main__':
