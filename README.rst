@@ -38,7 +38,7 @@ at root directory of this project.
 Requirements
 ==============
 
-- `terminal-notifier <https://rubygems.org/gems/terminal-notifier/>`_
+- growlnotify
 
 Options
 =========
@@ -53,7 +53,7 @@ Options
 - `-b BELL_SOUND`, `--bell-sound BELL_SOUND`: mp3 file of bell_sound
 - `--bgm`, `--play-bgm`: play bgm
 - `--bgm-sound BGM_FILENAME`: bgm music
-- `--terminal_notify_options TERMINAL_NOTIFY_OPTIONS`: options of terminal notify
+- `--growl_notify_options GROWL_NOTIFY_OPTIONS`: options of growl notify
 - `--hide-popup`: don't show popup
 -  `--force-to-use-task`: force to use task
 -  `-s, --show`: show options and exit
@@ -174,15 +174,15 @@ Out_log Option
 You can define `ring_bell` option by using configure file.
 When this option is `true`, show progress bar when this program spends time.
 
-Terminal_notify_options Option
+Growl_notify_options Option
 --------------------------------
 
-*Corresponding option: --terminal_notify_options*
+*Corresponding option: --growl_notify_options*
 *type: str*
 *default: ""*
 
-You can define `terminal_notify_options` option by using configure file.
-This value is given for options of `terminal-notify`.
+You can define `growl_notify_options` option by using configure file.
+This value is given for options of `growl-notify`.
 
 Force_to_use_task Option
 --------------------------
