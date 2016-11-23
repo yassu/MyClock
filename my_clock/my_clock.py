@@ -241,7 +241,7 @@ def merge_options(input_opts, conf_opts, hide_opts):
             'play_bgm', False,
             input_opts, conf_opts, hide_opts),
         'bgm_filename': get_option_value(
-            'bgm_filename', DEFAULT_BGM_SOUND,
+            'bgm_filename', None,
             input_opts, conf_opts, hide_opts),
         'terminal_notify_options': get_option_value(
             'terminal_notify_options',
