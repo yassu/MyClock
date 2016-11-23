@@ -75,7 +75,7 @@ class PlayThread(threading.Thread):
 
 def notify(options):
     run_cmd('growlnotify {} -t {} -m {}'.format(
-        options['terminal_notify_options'],
+        options['growl_notify_options'],
         get_terminal_escape(options['title']),
         get_terminal_escape(options['message'])), options)
 
@@ -243,8 +243,8 @@ def merge_options(input_opts, conf_opts, hide_opts):
         'bgm_filename': get_option_value(
             'bgm_filename', None,
             input_opts, conf_opts, hide_opts),
-        'terminal_notify_options': get_option_value(
-            'terminal_notify_options',
+        'growl_notify_options': get_option_value(
+            'growl_notify_options',
             '', input_opts, conf_opts, hide_opts),
         'hide_popup': get_option_value('hide_popup', False, input_opts,
                                        conf_opts, hide_opts),
@@ -305,7 +305,7 @@ def get_option_parser():
     parser.add_option(
         '--terminal-notify-options',
         action='store',
-        dest='terminal_notify_options',
+        dest='growl_notify_options',
         help='options of terminal notify')
     parser.add_option(
         '--hide-popup',
@@ -363,7 +363,7 @@ def main():
         'bell_sound': opts.bell_sound,
         'play_bgm': opts.play_bgm,
         'bgm_filename': opts.bgm_filename,
-        'terminal_notify_options': opts.terminal_notify_options,
+        'growl_notify_options': opts.growl_notify_options,
         'hide_popup': opts.hide_popup,
         'out_log': opts.out_log,
         'force_to_use_task': opts.force_to_use_task,
