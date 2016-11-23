@@ -96,6 +96,7 @@ For example,
 Verbose option
 ----------------
 
+*Corresponding option: -V, --verbose*
 *type: bool*
 *default: false*
 
@@ -106,6 +107,7 @@ If value of this options is `true`, this program show all options, running comma
 Message Option
 ----------------
 
+*Corresponding option: -g, --message*
 *type: str*
 *default: "MyClock"*
 
@@ -116,6 +118,7 @@ This value is given for message value of `termina-notify`.
 Title Option
 ----------------
 
+*Corresponding option: -t, --title*
 *type: str*
 *default: "MyClock"*
 
@@ -126,6 +129,7 @@ This value is given for title value of `termina-notify`.
 Ring_bell Option
 ------------------
 
+*Corresponding option: -r, --ring-bell*
 *type: bool*
 *default: false*
 
@@ -135,6 +139,7 @@ If value of this option is `true`, when finishing to spend time, play sound.
 Bell_sound Option
 -------------------
 
+*Corresponding option:---bgm-sound*
 *type: str*
 *default: inner-program sound*
 
@@ -143,6 +148,7 @@ Playing sound when this program is finished.
 Play_bgm Option
 -----------------
 
+*Corresponding option:--bgm, play-bgm*
 *type: bool*
 *default: false*
 
@@ -152,6 +158,7 @@ If value of this option is `true`, while this program spend time, this play musi
 Bgm_filename Option
 ---------------------
 
+*Corresponding option: bgm-sound*
 *type: str*
 *default: inner-program sound*
 
@@ -161,6 +168,7 @@ Playing sound when this program is speinding time.
 Out_log Option
 ----------------
 
+*Corresponding option: -o, --log*
 *type: bool*
 *default: false*
 
@@ -170,6 +178,7 @@ When this option is `true`, show progress bar when this program spends time.
 Terminal_notify_options Option
 --------------------------------
 
+*Corresponding option: --terminal_notify_options*
 *type: str*
 *default: ""*
 
@@ -179,6 +188,7 @@ This value is given for options of `terminal-notify`.
 Force_to_use_task Option
 --------------------------
 
+*Corresponding option: --force-to-use-task*
 *type: bool*
 *default: false*
 
