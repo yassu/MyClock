@@ -70,7 +70,6 @@ class PlayThread(threading.Thread):
         while now_time <= start_time + self._confs['time'] and\
                 self.play_wav._killed is False:
             self.play_wav.play()
-            print('ttt')
             now_time = time.time()
 
 
