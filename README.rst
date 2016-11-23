@@ -216,6 +216,7 @@ Of course, you can "overwrite" usual configure options or stdin.
 For example,
 
 ::
+
   {
     "_": {
       "verbose": true,
