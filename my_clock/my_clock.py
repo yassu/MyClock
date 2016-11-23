@@ -420,9 +420,6 @@ def main():
     except TimeSyntaxError as ex:
         my_error(ex.args[0] + '\n')
 
-    if not executable_growlnotify():
-        my_error('Please install terminal_notifier\n')
-
     if options['play_bgm'] and options['bell_sound'] is None:
         my_error('bell_sound is not defined.\n')
 
@@ -439,6 +436,9 @@ def main():
             th.start()
         spend_time(sleep_time, out_log=options['out_log'])
         th.kill()
+
+        if not options['hide_popup'] and not executable_growlnotify():
+            my_error('Please install terminal_notifier\n')
 
         if not options['hide_popup']:
             notify(options)
