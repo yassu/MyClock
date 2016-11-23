@@ -41,7 +41,7 @@ def check_file(filename):
 
 def executable_terminal_notifier():
     try:
-        subprocess.check_output(['terminal-notifier', '-help'])
+        subprocess.check_output(['which', 'terminal-notifier'])
         return True
     except FileNotFoundError:
         return False
