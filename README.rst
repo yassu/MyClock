@@ -19,8 +19,7 @@ Usage
 
 where `[times]` is a list of syntax of `{num}s`, `{num}m`, `{num}h` or `{num}`.
 
-MyClock program spends 60 * 60 * `h` + 60 * `m` + `s` times and notice by popup
-  or music.
+MyClock program spends 60 * 60 * `h` + 60 * `m` + `s` times and notice by popup or music.
 
 How to install
 ================
@@ -141,7 +140,7 @@ Bell_sound Option
 
 *Corresponding option:---bgm-sound*
 *type: str*
-*default: inner-program sound*
+*default: None*
 
 Playing sound when this program is finished.
 
@@ -160,7 +159,7 @@ Bgm_filename Option
 
 *Corresponding option: bgm-sound*
 *type: str*
-*default: inner-program sound*
+*default: None*
 
 You can define `bgm_filename` option by using configure file.
 Playing sound when this program is speinding time.
