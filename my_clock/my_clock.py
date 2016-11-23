@@ -449,7 +449,8 @@ def main():
             PlayWav({'wav_filename': DEFAULT_BELL_SOUND_FILENAME}).play()
     except KeyboardInterrupt:
         print('bye')
-        th.kill()
+        if options['play_bgm']:
+            th.kill()
         sys.exit()
 
 
