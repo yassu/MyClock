@@ -18,8 +18,6 @@ DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
 DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
 DEFAULT_TASK_NAME = 'default'
-DEFAULT_BELL_SOUND_FILENAME = os.path.abspath(
-    os.path.dirname(os.path.abspath(__file__)) + '/music/default_bell.wav')
 DEFAULT_BGM_SOUND = os.path.abspath(
     os.path.dirname(os.path.abspath(__file__)) + '/music/ticking.wav')
 INDENTATION = ' ' * 4
