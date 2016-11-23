@@ -37,9 +37,9 @@ def check_file(filename):
         sys.exit()
 
 
-def executable_terminal_notifier():
+def executable_growlnotify():
     try:
-        subprocess.check_output(['which', 'terminal-notifier'])
+        subprocess.check_output(['which', 'growlnotify'])
         return True
     except FileNotFoundError:
         return False
@@ -74,7 +74,7 @@ class PlayThread(threading.Thread):
 
 
 def notify(options):
-    run_cmd('terminal-notifier {} -title {} -message {} -sound default'.format(
+    run_cmd('growlnotify {} -t {} -m {}'.format(
         options['terminal_notify_options'],
         get_terminal_escape(options['title']),
         get_terminal_escape(options['message'])), options)
@@ -425,7 +425,7 @@ def main():
         sys.stderr.write(ex.args[0] + '\n')
         sys.exit()
 
-    if not executable_terminal_notifier():
+    if not executable_growlnotify():
         sys.stderr.write('Please install terminal_notifier\n')
         sys.exit()
 
