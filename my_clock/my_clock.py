@@ -23,6 +23,11 @@ DEFAULT_BGM_SOUND = os.path.abspath(
 INDENTATION = ' ' * 4
 
 
+def my_error(msg):
+    sys.stderr.write(msg)
+    sys.exit()
+
+
 def run_cmd(cmd, options):
     if options['verbose']:
         print('Run command: {}'.format(cmd))
@@ -33,8 +38,7 @@ def check_file(filename):
     if filename is None or os.path.isfile(filename):
         return True
     else:
-        sys.stderr.write('{} is not a file.\n'.format(filename))
-        sys.exit()
+        my_error('{} is not a file.\n'.format(filename))
 
 
 def executable_growlnotify():
@@ -133,16 +137,12 @@ def spend_time(_time, out_log=None):
         time.sleep(1)
 
 
-def get_option_value(opt_name, default_value,
-                     input_opts, conf_opts, hide_opts={}):
-    if input_opts[opt_name] is not None:
-        return input_opts[opt_name]
-    elif opt_name in conf_opts and conf_opts[opt_name] is not None:
-        return conf_opts[opt_name]
-    elif opt_name in hide_opts and hide_opts[opt_name] is not None:
-        return hide_opts[opt_name]
-    else:
-        return default_value
+def get_option_value(opt_name, default_value, *confs):
+    """ assume that opts[0].priority > opts[1].priority > ... """
+    for opts in confs:
+        if opt_name in opts and opts[opt_name] is not None:
+            return opts[opt_name]
+    return default_value
 
 
 def replace_for_config(d):
@@ -383,8 +383,7 @@ def main():
         else:
             hide_options = {}
     except IllegalJson5Error as ex:
-        sys.stderr.write(ex.args[0] + '\n')
-        sys.exit()
+        my_error(ex.args[0] + '\n')
     options = merge_options(input_options, options, hide_options)
     if options['bgm_filename'] is not None:
         options['bgm_filename'] = os.path.expanduser(options['bgm_filename'])
@@ -408,9 +407,7 @@ def main():
         check_file(options['bgm_filename'])
 
     if options['force_to_use_task'] and opts.task is None:
-        sys.stderr.write(
-            'Force to use option is True and task name is not defined.\n')
-        sys.exit()
+        my_error('Force to use option is True and task name is not defined.\n')
     if opts.task is None:
         opts.task = DEFAULT_TASK_NAME
 
@@ -419,23 +416,15 @@ def main():
             raise TimeNotFoundError()
         sleep_time = get_time(args, options['time'])
     except TimeNotFoundError:
-        sys.stderr.write('Please input times.\n')
-        sys.exit()
+        my_error('Please input times.\n')
     except TimeSyntaxError as ex:
-        sys.stderr.write(ex.args[0] + '\n')
-        sys.exit()
-
-    if not executable_growlnotify():
-        sys.stderr.write('Please install terminal_notifier\n')
-        sys.exit()
+        my_error(ex.args[0] + '\n')
 
     if options['play_bgm'] and options['bell_sound'] is None:
-        sys.stderr.write('bell_sound is not defined.\n')
-        sys.exit()
+        my_error('bell_sound is not defined.\n')
 
     if options['hide_popup'] and not options['ring_bell']:
-        sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
-        sys.exit()
+        my_error('Please hide_popup is False or ring_bell is True.\n')
     if options["verbose"]:
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
@@ -446,6 +435,10 @@ def main():
                              'time': sleep_time})
             th.start()
         spend_time(sleep_time, out_log=options['out_log'])
+        th.kill()
+
+        if not options['hide_popup'] and not executable_growlnotify():
+            my_error('Please install terminal_notifier\n')
 
         if not options['hide_popup']:
             notify(options)
