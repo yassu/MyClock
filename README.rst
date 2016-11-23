@@ -215,21 +215,20 @@ When this program spent time, hide options is loaded.
 Of course, you can "overwrite" usual configure options or stdin.
 For example,
 
-```
-{
-  "_": {
-    "verbose": true,
-    "out_log": true,
-    "title": "Hide Title",
-    "message": "Hide Message"
-  },
-  "sample": {
-  "title": "sample title",
-  "message": "sample message",
-  "time": ["2s"]
+::
+  {
+    "_": {
+      "verbose": true,
+      "out_log": true,
+      "title": "Hide Title",
+      "message": "Hide Message"
+    },
+    "sample": {
+    "title": "sample title",
+    "message": "sample message",
+    "time": ["2s"]
+    }
   }
-}
-```
 
 
 
