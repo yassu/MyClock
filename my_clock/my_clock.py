@@ -12,7 +12,7 @@ import os.path
 import time
 import wave
 
-__VERSION__ = "0.2.1"
+__VERSION__ = "0.2.2"
 
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = 'MyClock'
