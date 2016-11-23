@@ -388,6 +388,10 @@ def main():
         sys.stderr.write(ex.args[0] + '\n')
         sys.exit()
     options = merge_options(input_options, options, hide_options)
+    if options['bgm_filename'] is not None:
+        options['bgm_filename'] = os.path.expanduser(options['bgm_filename'])
+    if options['ring_bell'] is not None:
+        options['bell_sound'] = os.path.expanduser(options['bell_sound'])
 
     if opts.show:
         print('Options:')
