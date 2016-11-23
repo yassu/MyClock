@@ -1,0 +1,2 @@
+include my_clock/music/default_bell.wav
+include my_clock/music/ticking.wav
