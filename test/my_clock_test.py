@@ -126,7 +126,6 @@ def get_option_value_test2():
     """ input_optsだけ入力する場合のMessage """
     input_opts = get_input_opts()
     input_opts['message'] = 'InputMessage'
-    print(cl.get_option_value('message', cl.DEFAULT_MESSAGE, input_opts, {}))
     assert cl.get_option_value('message', cl.DEFAULT_MESSAGE,
                                input_opts, {}) == 'InputMessage'
 
