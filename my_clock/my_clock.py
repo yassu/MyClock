@@ -222,7 +222,7 @@ def get_time(times, conf_times):
 
 
 def merge_options(input_opts, conf_opts, hide_opts):
-    return {
+    options = {
         'verbose': get_option_value('verbose', False,
                                     input_opts, conf_opts, hide_opts),
         'message': get_option_value('message', DEFAULT_MESSAGE,
@@ -254,6 +254,13 @@ def merge_options(input_opts, conf_opts, hide_opts):
                                               conf_opts, hide_opts),
         'time': get_option_value('time', [], input_opts, conf_opts, hide_opts)
     }
+    if options['bell_sound'] is not None:
+        options['bell_sound'] = os.path.expanduser('~/{}'.format(
+                                                    options['bell_sound']))
+    if options['bgm_filename'] is not None:
+        options['bgm_filename'] = os.path.expanduser('~/{}'.format(
+                                                    options['bgm_filename']))
+    return options
 
 
 def get_option_parser():
