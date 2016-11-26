@@ -271,10 +271,15 @@ def merge_options(input_opts, conf_opts, hide_opts):
     if options['bgm_filename'] is not None:
         options['bgm_filename'] = os.path.expanduser('~/{}'.format(
                                                     options['bgm_filename']))
+    # merge_options 自体はtime not in optionsでも動くように
+    sleep_time = ''
+    if options['time'] != []:
+        sleep_time = get_time(options['time'])
+
     trans_opts = {
-        'sleep_time_sec': get_time(options['time']),
-        'sleep_time_min': get_time(options['time']) // 60,
-        'sleep_time_hour': get_time(options['time']) // (60 * 60),
+        'sleep_time_sec': sleep_time if sleep_time != '' else '',
+        'sleep_time_min': sleep_time // 60 if sleep_time != '' else '',
+        'sleep_time_hour': sleep_time // (60 * 60) if sleep_time != '' else '',
         'title': options['title'],
         'message': options['message'],
         'bgm_filename': options['bgm_filename'],
