@@ -14,6 +14,7 @@ check_output(['git', 'tag', version])
 
 # git push
 check_output(['git', 'checkout', 'master'])
+check_output(['git', 'merge', 'develop'])
 check_output(['git', 'push'])
 check_output(['git', 'checkout', 'develop'])
 
