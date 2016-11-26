@@ -12,15 +12,18 @@ import os.path
 import time
 import wave
 
-__VERSION__ = "0.2.2"
+__VERSION__ = "0.2.3"
 
 DEFAULT_TITLE = 'MyClock'
-DEFAULT_MESSAGE = 'MyClock'
+DEFAULT_MESSAGE = '<sleep_time_sec> seconds is spent.'
 DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
 DEFAULT_TASK_NAME = 'default'
-DEFAULT_BGM_SOUND = os.path.abspath(
-    os.path.dirname(os.path.abspath(__file__)) + '/music/ticking.wav')
 INDENTATION = ' ' * 4
+
+
+def my_error(msg):
+    sys.stderr.write(msg)
+    sys.exit()
 
 
 def run_cmd(cmd, options):
@@ -33,13 +36,12 @@ def check_file(filename):
     if filename is None or os.path.isfile(filename):
         return True
     else:
-        sys.stderr.write('{} is not a file.\n'.format(filename))
-        sys.exit()
+        my_error('{} is not a file.\n'.format(filename))
 
 
-def executable_terminal_notifier():
+def executable_growlnotify():
     try:
-        subprocess.check_output(['which', 'terminal-notifier'])
+        subprocess.check_output(['which', 'growlnotify'])
         return True
     except FileNotFoundError:
         return False
@@ -74,8 +76,8 @@ class PlayThread(threading.Thread):
 
 
 def notify(options):
-    run_cmd('terminal-notifier {} -title {} -message {} -sound default'.format(
-        options['terminal_notify_options'],
+    run_cmd('growlnotify {} -t {} -m {}'.format(
+        options['growl_notify_options'],
         get_terminal_escape(options['title']),
         get_terminal_escape(options['message'])), options)
 
@@ -133,16 +135,12 @@ def spend_time(_time, out_log=None):
         time.sleep(1)
 
 
-def get_option_value(opt_name, default_value,
-                     input_opts, conf_opts, hide_opts={}):
-    if input_opts[opt_name] is not None:
-        return input_opts[opt_name]
-    elif opt_name in conf_opts and conf_opts[opt_name] is not None:
-        return conf_opts[opt_name]
-    elif opt_name in hide_opts and hide_opts[opt_name] is not None:
-        return hide_opts[opt_name]
-    else:
-        return default_value
+def get_option_value(opt_name, default_value, *confs):
+    """ assume that opts[0].priority > opts[1].priority > ... """
+    for opts in confs:
+        if opt_name in opts and opts[opt_name] is not None:
+            return opts[opt_name]
+    return default_value
 
 
 def replace_for_config(d):
@@ -199,7 +197,7 @@ class TimeNotFoundError(ValueError):
     """ TimeNotFoundError """
 
 
-def get_time(times, conf_times):
+def get_time(times, conf_times=[]):
     if len(times) == 0 and len(conf_times) == 0:
         raise TimeNotFoundError('TIME IS NOT FOUND')
     if len(times) == 0:
@@ -221,8 +219,21 @@ def get_time(times, conf_times):
         return _time
 
 
+def transform_by_trans_opts(value, trans_opts):
+    for _from, _to in trans_opts.items():
+        value = value.replace('<{}>'.format(_from), str(_to))
+    return value
+
+
+def change_option_value(opt_name, value, trans_opts):
+    if isinstance(value, str):
+        return transform_by_trans_opts(value, trans_opts)
+    else:
+        return value
+
+
 def merge_options(input_opts, conf_opts, hide_opts):
-    return {
+    options = {
         'verbose': get_option_value('verbose', False,
                                     input_opts, conf_opts, hide_opts),
         'message': get_option_value('message', DEFAULT_MESSAGE,
@@ -243,8 +254,8 @@ def merge_options(input_opts, conf_opts, hide_opts):
         'bgm_filename': get_option_value(
             'bgm_filename', None,
             input_opts, conf_opts, hide_opts),
-        'terminal_notify_options': get_option_value(
-            'terminal_notify_options',
+        'growl_notify_options': get_option_value(
+            'growl_notify_options',
             '', input_opts, conf_opts, hide_opts),
         'hide_popup': get_option_value('hide_popup', False, input_opts,
                                        conf_opts, hide_opts),
@@ -254,6 +265,28 @@ def merge_options(input_opts, conf_opts, hide_opts):
                                               conf_opts, hide_opts),
         'time': get_option_value('time', [], input_opts, conf_opts, hide_opts)
     }
+    if options['bell_sound'] is not None:
+        options['bell_sound'] = os.path.expanduser('~/{}'.format(
+                                                    options['bell_sound']))
+    if options['bgm_filename'] is not None:
+        options['bgm_filename'] = os.path.expanduser('~/{}'.format(
+                                                    options['bgm_filename']))
+    # merge_options 自体はtime not in optionsでも動くように
+    sleep_time = 0
+    if options['time'] != []:
+        sleep_time = get_time(options['time'])
+
+    trans_opts = {
+        'sleep_time_sec': sleep_time if sleep_time != '' else '',
+        'sleep_time_min': sleep_time // 60 if sleep_time != '' else '',
+        'sleep_time_hour': sleep_time // (60 * 60) if sleep_time != '' else '',
+        'title': options['title'],
+        'message': options['message'],
+        'bgm_filename': options['bgm_filename'],
+        'bell_sound': options['bell_sound']}
+    for key in ('message', 'title', 'bgm_filename', 'bell_sound'):
+        options[key] = change_option_value(key, options[key], trans_opts)
+    return options
 
 
 def get_option_parser():
@@ -305,7 +338,7 @@ def get_option_parser():
     parser.add_option(
         '--terminal-notify-options',
         action='store',
-        dest='terminal_notify_options',
+        dest='growl_notify_options',
         help='options of terminal notify')
     parser.add_option(
         '--hide-popup',
@@ -363,7 +396,7 @@ def main():
         'bell_sound': opts.bell_sound,
         'play_bgm': opts.play_bgm,
         'bgm_filename': opts.bgm_filename,
-        'terminal_notify_options': opts.terminal_notify_options,
+        'growl_notify_options': opts.growl_notify_options,
         'hide_popup': opts.hide_popup,
         'out_log': opts.out_log,
         'force_to_use_task': opts.force_to_use_task,
@@ -383,8 +416,7 @@ def main():
         else:
             hide_options = {}
     except IllegalJson5Error as ex:
-        sys.stderr.write(ex.args[0] + '\n')
-        sys.exit()
+        my_error(ex.args[0] + '\n')
     options = merge_options(input_options, options, hide_options)
     if options['bgm_filename'] is not None:
         options['bgm_filename'] = os.path.expanduser(options['bgm_filename'])
@@ -408,9 +440,7 @@ def main():
         check_file(options['bgm_filename'])
 
     if options['force_to_use_task'] and opts.task is None:
-        sys.stderr.write(
-            'Force to use option is True and task name is not defined.\n')
-        sys.exit()
+        my_error('Force to use option is True and task name is not defined.\n')
     if opts.task is None:
         opts.task = DEFAULT_TASK_NAME
 
@@ -419,23 +449,15 @@ def main():
             raise TimeNotFoundError()
         sleep_time = get_time(args, options['time'])
     except TimeNotFoundError:
-        sys.stderr.write('Please input times.\n')
-        sys.exit()
+        my_error('Please input times.\n')
     except TimeSyntaxError as ex:
-        sys.stderr.write(ex.args[0] + '\n')
-        sys.exit()
-
-    if not executable_terminal_notifier():
-        sys.stderr.write('Please install terminal_notifier\n')
-        sys.exit()
+        my_error(ex.args[0] + '\n')
 
     if options['play_bgm'] and options['bell_sound'] is None:
-        sys.stderr.write('bell_sound is not defined.\n')
-        sys.exit()
+        my_error('bell_sound is not defined.\n')
 
     if options['hide_popup'] and not options['ring_bell']:
-        sys.stderr.write('Please hide_popup is False or ring_bell is True.\n')
-        sys.exit()
+        my_error('Please hide_popup is False or ring_bell is True.\n')
     if options["verbose"]:
         print('options: {}'.format(str(options)))
         print('sleep {}'.format(sleep_time))
@@ -446,6 +468,10 @@ def main():
                              'time': sleep_time})
             th.start()
         spend_time(sleep_time, out_log=options['out_log'])
+        th.kill()
+
+        if not options['hide_popup'] and not executable_growlnotify():
+            my_error('Please install terminal_notifier\n')
 
         if not options['hide_popup']:
             notify(options)

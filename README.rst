@@ -2,7 +2,7 @@
 MyClock
 =========
 
-*version: 0.2.2*
+*version: 0.2.3*
 
 MyClock is a simple and "programmable" clock program.
 
@@ -19,8 +19,7 @@ Usage
 
 where `[times]` is a list of syntax of `{num}s`, `{num}m`, `{num}h` or `{num}`.
 
-MyClock program spends 60 * 60 * `h` + 60 * `m` + `s` times and notice by popup
-  or music.
+MyClock program spends 60 * 60 * `h` + 60 * `m` + `s` times and notice by popup or music.
 
 How to install
 ================
@@ -39,7 +38,7 @@ at root directory of this project.
 Requirements
 ==============
 
-- `terminal-notifier <https://rubygems.org/gems/terminal-notifier/>`_
+- growlnotify
 
 Options
 =========
@@ -47,14 +46,14 @@ Options
 - `--version`: show program's version number and exit
 - `-h`, `--help`: show this help message and exit
 - `-V`, `--verbose`: verbose
-- `-g MESSAGE`, `--message=MESSAGE`: set message string default: "MyClock"
+- `-g MESSAGE`, `--message=MESSAGE`: set message string default: "<sleep_time_min> seconds is spent."
 - `-t TITLE`, `--title=TITLE`: set title string. default: "MyClock"
 - `-o`, `--log`: out log to stdout
 - `-r`, `--ring-bell`: ring bell or not after timer
 - `-b BELL_SOUND`, `--bell-sound BELL_SOUND`: mp3 file of bell_sound
 - `--bgm`, `--play-bgm`: play bgm
 - `--bgm-sound BGM_FILENAME`: bgm music
-- `--terminal_notify_options TERMINAL_NOTIFY_OPTIONS`: options of terminal notify
+- `--growl_notify_options GROWL_NOTIFY_OPTIONS`: options of growl notify
 - `--hide-popup`: don't show popup
 -  `--force-to-use-task`: force to use task
 -  `-s, --show`: show options and exit
@@ -93,6 +92,16 @@ For example,
     }
   }
 
+You can embed value of following options in message, title, bgm_filename or bell_sound options as syntax `<{opt_name}>`:
+
+* sleep_time_sec
+* sleep_time_min
+* sleep_time_hour
+* title
+* message
+* bgm_filename
+* bell_sound
+
 Verbose option
 ----------------
 
@@ -109,7 +118,7 @@ Message Option
 
 *Corresponding option: -g, --message*
 *type: str*
-*default: "MyClock"*
+*default: "<sleep_time_sec> seconds is spent."*
 
 You can define `message` option by using configure file.
 
@@ -141,7 +150,7 @@ Bell_sound Option
 
 *Corresponding option:---bgm-sound*
 *type: str*
-*default: inner-program sound*
+*default: None*
 
 Playing sound when this program is finished.
 
@@ -160,7 +169,7 @@ Bgm_filename Option
 
 *Corresponding option: bgm-sound*
 *type: str*
-*default: inner-program sound*
+*default: None*
 
 You can define `bgm_filename` option by using configure file.
 Playing sound when this program is speinding time.
@@ -175,15 +184,15 @@ Out_log Option
 You can define `ring_bell` option by using configure file.
 When this option is `true`, show progress bar when this program spends time.
 
-Terminal_notify_options Option
+Growl_notify_options Option
 --------------------------------
 
-*Corresponding option: --terminal_notify_options*
+*Corresponding option: --growl_notify_options*
 *type: str*
 *default: ""*
 
-You can define `terminal_notify_options` option by using configure file.
-This value is given for options of `terminal-notify`.
+You can define `growl_notify_options` option by using configure file.
+This value is given for options of `growl-notify`.
 
 Force_to_use_task Option
 --------------------------

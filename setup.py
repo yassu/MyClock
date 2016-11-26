@@ -22,7 +22,7 @@ setup(
     url='https://github.com/yassu/MyClock',
     license='MIT',
     packages=['my_clock'],
-    install_requires=['json5'],
+    install_requires=['json5', 'tqdm'],
     classifiers=classifiers,
     entry_points="""
        [console_scripts]
