@@ -15,7 +15,7 @@ import wave
 __VERSION__ = "0.2.2"
 
 DEFAULT_TITLE = 'MyClock'
-DEFAULT_MESSAGE = 'MyClock'
+DEFAULT_MESSAGE = '<sleep_time_sec> seconds is spent.'
 DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
 DEFAULT_TASK_NAME = 'default'
 INDENTATION = ' ' * 4
@@ -197,7 +197,7 @@ class TimeNotFoundError(ValueError):
     """ TimeNotFoundError """
 
 
-def get_time(times, conf_times):
+def get_time(times, conf_times=[]):
     if len(times) == 0 and len(conf_times) == 0:
         raise TimeNotFoundError('TIME IS NOT FOUND')
     if len(times) == 0:
@@ -217,6 +217,19 @@ def get_time(times, conf_times):
             raise TimeSyntaxError('{} is illegal as time.'.format(t))
     else:
         return _time
+
+
+def transform_by_trans_opts(value, trans_opts):
+    for _from, _to in trans_opts.items():
+        value = value.replace('<{}>'.format(_from), str(_to))
+    return value
+
+
+def change_option_value(opt_name, value, trans_opts):
+    if isinstance(value, str):
+        return transform_by_trans_opts(value, trans_opts)
+    else:
+        return value
 
 
 def merge_options(input_opts, conf_opts, hide_opts):
@@ -258,6 +271,21 @@ def merge_options(input_opts, conf_opts, hide_opts):
     if options['bgm_filename'] is not None:
         options['bgm_filename'] = os.path.expanduser('~/{}'.format(
                                                     options['bgm_filename']))
+    # merge_options 自体はtime not in optionsでも動くように
+    sleep_time = 0
+    if options['time'] != []:
+        sleep_time = get_time(options['time'])
+
+    trans_opts = {
+        'sleep_time_sec': sleep_time if sleep_time != '' else '',
+        'sleep_time_min': sleep_time // 60 if sleep_time != '' else '',
+        'sleep_time_hour': sleep_time // (60 * 60) if sleep_time != '' else '',
+        'title': options['title'],
+        'message': options['message'],
+        'bgm_filename': options['bgm_filename'],
+        'bell_sound': options['bell_sound']}
+    for key in ('message', 'title', 'bgm_filename', 'bell_sound'):
+        options[key] = change_option_value(key, options[key], trans_opts)
     return options
 
 

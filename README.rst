@@ -46,7 +46,7 @@ Options
 - `--version`: show program's version number and exit
 - `-h`, `--help`: show this help message and exit
 - `-V`, `--verbose`: verbose
-- `-g MESSAGE`, `--message=MESSAGE`: set message string default: "MyClock"
+- `-g MESSAGE`, `--message=MESSAGE`: set message string default: "<sleep_time_min> seconds is spent."
 - `-t TITLE`, `--title=TITLE`: set title string. default: "MyClock"
 - `-o`, `--log`: out log to stdout
 - `-r`, `--ring-bell`: ring bell or not after timer
@@ -92,6 +92,16 @@ For example,
     }
   }
 
+You can embed value of following options in message, title, bgm_filename or bell_sound options as syntax `<{opt_name}>`:
+
+* sleep_time_sec
+* sleep_time_min
+* sleep_time_hour
+* title
+* message
+* bgm_filename
+* bell_sound
+
 Verbose option
 ----------------
 
@@ -108,7 +118,7 @@ Message Option
 
 *Corresponding option: -g, --message*
 *type: str*
-*default: "MyClock"*
+*default: "<sleep_time_sec> seconds is spent."*
 
 You can define `message` option by using configure file.
 
