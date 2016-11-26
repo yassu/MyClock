@@ -15,7 +15,7 @@ import wave
 __VERSION__ = "0.2.2"
 
 DEFAULT_TITLE = 'MyClock'
-DEFAULT_MESSAGE = 'MyClock'
+DEFAULT_MESSAGE = '<sleep_time_sec> seconds is spent.'
 DEFAULT_CONFIG_JFILENAME = os.path.expanduser('~/.clock.json')
 DEFAULT_TASK_NAME = 'default'
 INDENTATION = ' ' * 4
