@@ -197,7 +197,7 @@ class TimeNotFoundError(ValueError):
     """ TimeNotFoundError """
 
 
-def get_time(times, conf_times):
+def get_time(times, conf_times=[]):
     if len(times) == 0 and len(conf_times) == 0:
         raise TimeNotFoundError('TIME IS NOT FOUND')
     if len(times) == 0:
@@ -217,6 +217,19 @@ def get_time(times, conf_times):
             raise TimeSyntaxError('{} is illegal as time.'.format(t))
     else:
         return _time
+
+
+def transform_by_trans_opts(value, trans_opts):
+    for _from, _to in trans_opts.items():
+        value = value.replace('<{}>'.format(_from), str(_to))
+    return value
+
+
+def change_option_value(opt_name, value, trans_opts):
+    if isinstance(value, str):
+        return transform_by_trans_opts(value, trans_opts)
+    else:
+        return value
 
 
 def merge_options(input_opts, conf_opts, hide_opts):
@@ -258,6 +271,16 @@ def merge_options(input_opts, conf_opts, hide_opts):
     if options['bgm_filename'] is not None:
         options['bgm_filename'] = os.path.expanduser('~/{}'.format(
                                                     options['bgm_filename']))
+    trans_opts = {
+        'sleep_time_sec': get_time(options['time']),
+        'sleep_time_min': get_time(options['time']) // 60,
+        'sleep_time_hour': get_time(options['time']) // (60 * 60),
+        'title': options['title'],
+        'message': options['message'],
+        'bgm_filename': options['bgm_filename'],
+        'bell_sound': options['bell_sound']}
+    for key in ('message', 'title', 'bgm_filename', 'bell_sound'):
+        options[key] = change_option_value(key, options[key], trans_opts)
     return options
 
 
