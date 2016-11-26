@@ -227,8 +227,9 @@ def get_option_value_test2_7():
 
 def merge_options_message_test1():
     """ なにもOptionがない場合のmessageのテスト """
+    print(cl.merge_options(get_input_opts(), {}, {})['message'])
     assert cl.merge_options(get_input_opts(), {}, {})['message'] == \
-        cl.DEFAULT_MESSAGE
+        cl.DEFAULT_MESSAGE.replace('<sleep_time_sec>', '0')
 
 
 def merge_options_message_test2():
