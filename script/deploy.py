@@ -16,3 +16,6 @@ check_output(['git', 'tag', version])
 check_output(['git', 'checkout', 'master'])
 check_output(['git', 'push'])
 check_output(['git', 'checkout', 'develop'])
+
+# release
+check_output(['python', 'setup.py', 'release'])
