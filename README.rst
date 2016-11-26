@@ -92,6 +92,16 @@ For example,
     }
   }
 
+You can embed value of following options in message, title, bgm_filename or bell_sound options as syntax `<{opt_name}>`:
+
+* sleep_time_sec
+* sleep_time_min
+* sleep_time_hour
+* title
+* message
+* bgm_filename
+* bell_sound
+
 Verbose option
 ----------------
 
