@@ -468,7 +468,8 @@ def main():
                              'time': sleep_time})
             th.start()
         spend_time(sleep_time, out_log=options['out_log'])
-        th.kill()
+        if options['play_bgm']:
+            th.kill()
 
         if not options['hide_popup'] and not executable_growlnotify():
             my_error('Please install terminal_notifier\n')
