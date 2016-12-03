@@ -242,7 +242,7 @@ def merge_options(input_opts, conf_opts, hide_opts):
                                   input_opts, conf_opts, hide_opts),
         'ring_bell': get_option_value('ring_bell', False,
                                       input_opts, conf_opts, hide_opts),
-        'out_log': get_option_value('out_log', False,
+        'out_log': get_option_value('out_log', True,
                                     input_opts, conf_opts, hide_opts),
         'bell_sound': get_option_value(
             'bell_sound',
