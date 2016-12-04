@@ -12,7 +12,7 @@ import os.path
 import time
 import wave
 
-__VERSION__ = "0.2.4"
+__VERSION__ = "0.2.5"
 
 DEFAULT_TITLE = 'MyClock'
 DEFAULT_MESSAGE = '<sleep_time_sec> seconds is spent.'
